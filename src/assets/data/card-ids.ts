@@ -1,5 +1,5 @@
 export const cardIds = [
-  "023b5e6f-10de-422d-8431-11f1fdeca246", "47f82d84-03ad-42dd-80ce-f0ac5e353e46", "d25ff6aa-a01d-49f2-926f-8f5457143b5c",
+  "20e94e17-2e4c-41cd-8cc5-39ab41037287", "47f82d84-03ad-42dd-80ce-f0ac5e353e46", "d25ff6aa-a01d-49f2-926f-8f5457143b5c",
   "9561ffdb-f4dd-4b62-a2c2-933498e3a061", "e2a8f60f-7cca-4528-b153-a8804e93626e", "e77e2fd5-5c46-4f6b-ac43-ec23fab57a1a",
   "c9045fcb-b633-4c35-8058-6234311551ae", "59fdc045-b938-4321-aec3-51685cbbaa52", "8d96bc2b-2e31-4654-b192-c3f023d9fde6",
   "c86b45d9-aba6-4c09-8605-037754ba7fd4", "a5eba273-0b83-42a7-b8b0-9e0cd6a7aa6f", "bc10173d-25ff-4734-b8f2-84f94fe52b17",
@@ -26,7 +26,7 @@ export const cardIds = [
   "32869a36-f21e-4348-a787-871daa6151df", "16665386-405e-48c9-8c69-c21b03931c2f", "817602f9-0844-4ba2-bd7c-380fcd0c15ff",
   "0c33d3fe-cdd3-4829-8f10-6611f063983b", "90eaf94e-85a7-4958-aa58-8e2fe44db58d", "de3d0a45-3b3a-4718-9cb8-ff0c2464d634",
   "d998c949-4791-477f-ab8d-e625199623ad", "a5af083f-5820-4185-ac04-4c4368f7703c", "ec2120ff-a6d4-4192-96c0-33c139155ddf",
-  "afaf277e-b430-4c96-880c-ae654973478c", "20e94e17-2e4c-41cd-8cc5-39ab41037287", "f70ea481-1751-4097-af41-2d13fe79e788",
+  "afaf277e-b430-4c96-880c-ae654973478c", "f70ea481-1751-4097-af41-2d13fe79e788", "023b5e6f-10de-422d-8431-11f1fdeca246",
   "000eded9-854c-408a-aadf-c26209e27432", "357513b9-0505-4b67-9a29-36a705a175b1", "082e6ee3-cc1f-46c7-9d82-56751478b3cf",
   "1f3013bf-9647-4bdb-a638-d299ae00f88e", "1a6cbece-f9d8-4c40-b72b-dfdb86430ff2", "42c9d49d-61eb-4f33-b06b-03bdd990efd0",
   "a9319039-db2f-47bf-9ef0-8d3a381d54fb", "db1f578f-fa3b-4447-953b-1490852b6c80", "47ce8b7e-d8e1-489a-a69e-99089eeb8739",
@@ -58,4 +58,27 @@ export const cardIds = [
   "41193ef1-1619-4448-9905-26b05079c79a", "e8bbece8-9620-44d9-b991-350fe952538a", "65eb5920-3b03-4300-bc77-0fba5e6abe69",
   "1a07b620-6702-4c24-a6bb-03167c64be30", "4f587d8d-1bef-4e4b-9b94-94c0ae11bc8f", "8da35f9f-e72c-4154-a212-7de98f84ad7d",
   "251015ed-9408-4941-894a-158551ed2613"
+];
+
+export const cardNames = [
+  "Thallid",
+  "Thalakos Seer",
+  "Thalakos Scout",
+  "Thalakos Sentry",
+  "Thalia's Lancers",
+  "Thallid Devourer",
+  "Thallid Omnivore",
+  "Thalakos Drifters",
+  "Thalakos Deceiver",
+  "Thalakos Lowlands",
+  "Thalakos Mistfolk",
+  "Thallid Germinator",
+  "Thallid Soothsayer",
+  "Thalia's Lieutenant",
+  "Thalia's Geistcaller",
+  "Thalia, Heretic Cathar",
+  "Thalakos Dreamsower",
+  "Thallid Shell-Dweller",
+  "Thalisse, Reverent Medium",
+  "Thalia, Guardian of Thraben"
 ];
