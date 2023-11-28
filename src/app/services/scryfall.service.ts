@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Card, CardFace} from "../models/card";
 import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {ScryfallCollectionResponse} from "../models/scryfall-collection-response";
+import {ScryfallAutocompleteResponse} from "../models/scryfall-autocomplete-response";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,16 @@ export class ScryfallService {
 
   private readonly http = inject(HttpClient);
 
+  getCardsForAutocomplete(param: string): Observable<Card[]> {
+    return this.http.get<ScryfallAutocompleteResponse>(
+        this.BASE_API_URL + '/autocomplete?q=' + param,
+        { headers: {'Content-Type': 'application/json'}}
+    ).pipe(
+        switchMap((value, _) =>
+            this.getCardsForIDs(value.data)
+        )
+    );
+  }
   getCardsForIDs(ids: string[]): Observable<Card[]> {
     const idSlices = this.sliceIDArray(ids);
     const payloads = idSlices.map(
