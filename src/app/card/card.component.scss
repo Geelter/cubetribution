@@ -1,0 +1,67 @@
+:host {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: all 500ms linear;
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  border-radius: 4.72% / 3.37%;
+  backface-visibility: hidden;
+  background-image: repeating-linear-gradient(-55deg, #DDD, #DDD 5px, #CCC 5px, #CCC 10px);
+  overflow: hidden;
+}
+
+.front {
+  z-index: 20;
+}
+
+.back {
+  z-index: 10;
+  transform: rotateY(180deg);
+}
+
+.flip-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1000;
+
+  opacity: 0.60;
+  background: white;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  border: 2px solid #343242;
+  display: block;
+  height: max(20px, 15%);
+  aspect-ratio: 1;
+  padding: 3%;
+  cursor: pointer;
+  transform-style: flat;
+  transition: background-color 200ms linear, opacity 50ms linear;
+
+  &:hover,
+  &:active {
+    opacity: 1;
+  }
+
+  &--active {
+    border-color: #FFF;
+    background-color: #343242;
+
+    path {
+      fill: #FFF;
+    }
+  }
+}
