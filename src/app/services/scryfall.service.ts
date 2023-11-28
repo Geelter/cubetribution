@@ -41,15 +41,32 @@ export class ScryfallService {
     return slices;
   }
 
-  private convertIDSliceToScryfallPayload(idSlices: string[]) {
-    const identifiers = idSlices.map(id => {
-      return { id }
+  private convertIDSliceToScryfallPayload(idSlice: string[]) {
+    const idPattern = /^[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}$/;
+    const dualNamePattern = /\/\/+/;
+
+    const identifiers = idSlice.map(id => {
+      const obj: any = {};
+
+      let identifier = '';
+
+      if (idPattern.test(id)) {
+        identifier = id;
+      } else if (dualNamePattern.test(id)) {
+        const parts = id.split(dualNamePattern);
+        identifier = parts[0].trim();
+      } else {
+        identifier = id;
+      }
+
+      idPattern.test(identifier) ? obj.id = identifier : obj.name = identifier;
+      return obj;
     });
 
     return { identifiers };
   }
 
-  private createRequestsForPayloads(payloads: {identifiers: {id: string}[]}[]) {
+  private createRequestsForPayloads(payloads: {identifiers: any[]}[]) {
     return payloads.map(payload => {
       return this.http.post<ScryfallCollectionResponse>(
         this.BASE_API_URL + '/collection',
