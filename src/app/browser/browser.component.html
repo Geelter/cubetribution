@@ -1,0 +1,11 @@
+<input #input placeholder="Card name" (keyup)="onInputChange(input.value)"/>
+<ng-container *ngIf="browsedCards$ | async as cards">
+  <div class="card-grid">
+    <app-card *ngFor="let card of cards; index as i" [card]="card" style="width: 100%; aspect-ratio: 5/7"></app-card>
+<!--    @for (card of cards; track card.id) {-->
+<!--      <app-card [card]="card" style="width: 100%; aspect-ratio: 5/7"></app-card>-->
+<!--    } @empty {-->
+<!--      No cards found-->
+<!--    }-->
+  </div>
+</ng-container>
