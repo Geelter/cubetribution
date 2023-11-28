@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "cubetribution:build:production"
+              "buildTarget": "cubetribution:build:production"
             },
             "development": {
-              "browserTarget": "cubetribution:build:development"
+              "buildTarget": "cubetribution:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cubetribution:build"
+            "buildTarget": "cubetribution:build"
           }
         },
         "test": {
