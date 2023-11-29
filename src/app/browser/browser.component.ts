@@ -4,12 +4,12 @@ import {BehaviorSubject, debounceTime, distinctUntilChanged, Observable, tap} fr
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {ScryfallService} from "../services/scryfall.service";
 import {Card} from "../models/card";
-import {CardComponent} from "../card/card.component";
+import {CardGridComponent} from "../card-grid/card-grid.component";
 
 @Component({
   selector: 'app-browser',
   standalone: true,
-    imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardGridComponent],
   templateUrl: './browser.component.html',
   styleUrls: ['./browser.component.scss']
 })
