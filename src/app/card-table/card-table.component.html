@@ -1,0 +1,39 @@
+<p-table #cardTable
+         [value]="cardList"
+         (sortFunction)="customCardSort($event)"
+         [customSort]="true"
+         styleClass="p-datatable-striped"
+         [tableStyle]="{ 'width': '100%' }"
+         [(selection)]="selectedCards"
+         [rowHover]="true"
+         (onRowSelect)="emitSelectedCards()"
+         (onRowUnselect)="emitSelectedCards()"
+         dataKey="id"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 4rem">
+        <p-tableHeaderCheckbox (click)="emitSelectedCards()"></p-tableHeaderCheckbox>
+      </th>
+      <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+      <th pSortableColumn="rarity">Rarity <p-sortIcon field="rarity"></p-sortIcon></th>
+      <th pSortableColumn="mana_cost">Mana Cost <p-sortIcon field="mana_cost"></p-sortIcon></th>
+      <th pSortableColumn="cmc">CMC <p-sortIcon field="cmc"></p-sortIcon></th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-card>
+    <tr>
+      <td>
+        <p-tableCheckbox [value]="card"></p-tableCheckbox>
+      </td>
+      <td>{{ card.name }}</td>
+      <td>{{ card.rarity }}</td>
+      <td><app-mana-cost [manaCost]="card.manaCost"></app-mana-cost></td>
+      <td>{{ card.cmc }}
+      <td>
+<!--        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCard(card)"></button>-->
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
