@@ -1,4 +1,8 @@
 <input #input type="search" placeholder="Card name" (keyup)="onInputChange(input.value)"/>
 @if (browsedCards$ | async; as cards) {
-  <app-card-grid [cardList]="cards"></app-card-grid>
+  <app-card-list class="p-border"
+                 [cardList]="cards"
+                 [(selectedCards)]="selectedCards"
+                 [selectedLayout]="selectedLayout"
+  ></app-card-list>
 }
