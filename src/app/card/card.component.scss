@@ -21,6 +21,7 @@
   backface-visibility: hidden;
   background-image: repeating-linear-gradient(-55deg, #DDD, #DDD 5px, #CCC 5px, #CCC 10px);
   overflow: hidden;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.45);
 }
 
 .front {
@@ -64,4 +65,21 @@
       fill: #FFF;
     }
   }
+}
+
+.selection-icon {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid var(--text-color);
+  border-radius: 500px;
+  width: 4rem;
+  aspect-ratio: 1;
+  background: var(--surface-a);
+
+  opacity: 0.6;
+  pointer-events: none;
 }
