@@ -1,1 +1,69 @@
-<p>signup works!</p>
+<form [formGroup]="signUpForm"
+      (ngSubmit)="onSubmit()"
+      class="p-card flex flex-column p-4"
+>
+  <h2 class="text-center mb-5">Sign Up</h2>
+
+  <span class="p-float-label mb-5">
+      <input
+        id="email"
+        type="email"
+        pInputText
+        class="w-full"
+        formControlName="email"
+      />
+      <label for="email">Email</label>
+  </span>
+
+  <span class="p-float-label mb-5">
+      <p-password
+        id="password"
+        [showClear]="true"
+        [toggleMask]="true"
+        formControlName="password"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      ></p-password>
+      <label for="password">Password</label>
+  </span>
+
+  <span class="p-float-label mb-2">
+      <p-password
+        id="password-confirm"
+        [showClear]="true"
+        [toggleMask]="true"
+        [feedback]="false"
+        formControlName="confirmPassword"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      ></p-password>
+      <label for="password-confirm">Confirm Password</label>
+  </span>
+
+  <p-button
+    type="button"
+    class="align-self-end mb-2"
+    label="Forgot your password?"
+    [text]="true"
+  ></p-button
+  >
+
+  <p-button
+    type="submit"
+    [label]="isSubmitting ? 'Sending Request' : 'Sign Up'"
+    styleClass="w-full"
+    [loading]="isSubmitting"
+    [disabled]="!signUpForm.valid || isSubmitting"
+  ></p-button>
+
+  <p-divider align="center">
+    <b>OR</b>
+  </p-divider>
+
+  <p-button
+    type="button"
+    label="Use existing account"
+    [outlined]="true"
+    styleClass="w-full"
+  ></p-button>
+</form>
