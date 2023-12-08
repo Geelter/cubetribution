@@ -1,23 +1,3 @@
-export interface Card {
-  id: string,
-  name: string,
-  lang: string,
-  released_at: string,
-  scryfall_uri: string,
-  layout: string,
-  image_uris: ImageURIs | null,
-  card_faces: CardFace[] | null,
-  mana_cost: string, /* {1}{R}{B} */
-  cmc: number,
-  type_line: string,
-  oracle_text: string,
-  power: string,
-  toughness: string,
-  colors: string[], /* ["R", "B"] */
-  color_identity: string[], /* ["R", "B"] */
-  rarity: string,
-}
-
 export interface CardFace {
   colors: string[],
   image_uris: ImageURIs | null,
@@ -36,4 +16,72 @@ interface ImageURIs {
   png: string,
   art_crop: string,
   border_crop: string,
+}
+
+export class Card {
+  private readonly _id: string;
+  private readonly _name: string;
+  private readonly _image_uris: ImageURIs | null;
+  private readonly _card_faces: CardFace[] | null;
+  private readonly _mana_cost: string; /* {1}{R}{B} */
+  private readonly _cmc: number;
+  // private _type_line: string;
+  // private _colors: string[]; /* ["R", "B"] */
+  private readonly _rarity: string;
+
+  constructor(cardData: any) {
+    this._id = cardData.id;
+    this._name = cardData.name;
+    this._image_uris = cardData.image_uris;
+    this._card_faces = cardData.card_faces;
+    this._mana_cost = cardData.mana_cost;
+    this._cmc = cardData.cmc;
+    this._rarity = cardData.rarity;
+  }
+
+  public get id() {
+    return this._id;
+  }
+
+  public get name() {
+    return this._name;
+  }
+
+  public get frontImageURIs() {
+    if (this._image_uris != null) {
+      return this._image_uris;
+    } else {
+      return this._card_faces![0].image_uris!;
+    }
+  }
+
+  public get backImageURIs() {
+    return this._card_faces?.[1].image_uris;
+  }
+
+  public get cardFaces() {
+    return this._card_faces;
+  }
+
+  public get manaCost() {
+    if (this._card_faces != null && this._card_faces[0].mana_cost != "") {
+      return this._card_faces[0].mana_cost;
+    } else if (this._mana_cost != "") {
+      return this._mana_cost;
+    } else {
+      return "N/A";
+    }
+  }
+
+  public get cmc() {
+    return this._cmc;
+  }
+
+  public get rarity() {
+    return this._rarity;
+  }
+
+  public get isDoubleSided() {
+    return !!(this._card_faces && this._card_faces[0].image_uris != null);
+  }
 }
