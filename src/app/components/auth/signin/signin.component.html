@@ -15,7 +15,7 @@
       <label for="email">Email</label>
   </span>
 
-  <span class="p-float-label">
+  <span class="p-float-label mb-2">
       <p-password
         id="password"
         [showClear]="true"
@@ -30,7 +30,7 @@
 
   <p-button
     type="button"
-    class="align-self-end mb-5 mt-2"
+    class="align-self-end mb-2"
     label="Forgot your password?"
     [text]="true"
   ></p-button
@@ -38,7 +38,7 @@
 
   <p-button
     type="submit"
-    [label]="isSubmitting ? 'Sending Request' : 'Log In'"
+    [label]="isSubmitting ? 'Sending Request' : 'Sign In'"
     styleClass="w-full"
     [loading]="isSubmitting"
     [disabled]="!signInForm.valid || isSubmitting"
