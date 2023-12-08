@@ -6,6 +6,34 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link id="theme-link" rel="stylesheet" type="text/css" href="assets/primeng/themes/lara/lara-dark/amber/theme.css">
+  <script>
+    const colorModeOverride = window.localStorage.getItem("color-mode");
+    const hasColorModeOverride = typeof colorModeOverride === "string";
+    const colorModePreference =
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? 'dark'
+      : 'light';
+
+    function switchTheme(mode) {
+      const currentLinkElement = document.getElementById('theme-link');
+      const themeFile = 'assets/primeng/themes/lara/lara-' + mode + '/amber/theme.css';
+
+      if (currentLinkElement) {
+        currentLinkElement.href = themeFile;
+      }
+    }
+
+    if (hasColorModeOverride) {
+      document.documentElement.setAttribute(
+        "data-force-color-mode",
+        colorModeOverride
+      );
+      switchTheme(colorModeOverride);
+    } else {
+      switchTheme(colorModePreference);
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>
