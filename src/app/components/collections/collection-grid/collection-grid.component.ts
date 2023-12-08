@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Collection} from "../models/collection";
+import {Collection} from "../../../models/collection";
 import {CollectionComponent} from "../collection/collection.component";
-import {sampleCollection} from "../models/collection";
+import {sampleCollection} from "../../../models/collection";
 
 @Component({
   selector: 'app-collection-grid',

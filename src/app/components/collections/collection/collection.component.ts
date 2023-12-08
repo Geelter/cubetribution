@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {Collection} from "../models/collection";
+import {Collection} from "../../../models/collection";
 
 @Component({
   selector: 'app-collection',

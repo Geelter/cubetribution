@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {Card} from "../models/card";
+import {Card} from "../../../models/card";
 
 @Component({
   selector: 'app-card',

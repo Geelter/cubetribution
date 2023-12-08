@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TableModule} from "primeng/table";
-import {Card} from "../models/card";
+import {Card} from "../../../models/card";
 import {ManaCostComponent} from "../mana-cost/mana-cost.component";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";

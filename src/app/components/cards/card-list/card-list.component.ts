@@ -2,7 +2,7 @@ import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core
 import { CommonModule } from '@angular/common';
 import {CardGridComponent} from "../card-grid/card-grid.component";
 import {CardTableComponent} from "../card-table/card-table.component";
-import {Card} from "../models/card";
+import {Card} from "../../../models/card";
 
 @Component({
   selector: 'app-card-list',

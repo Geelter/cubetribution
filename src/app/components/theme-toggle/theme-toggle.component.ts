@@ -1,7 +1,7 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {ThemeLoaderService} from "../services/theme-loader/theme-loader.service";
+import {ThemeLoaderService} from "../../services/theme-loader/theme-loader.service";
 
 @Component({
   selector: 'app-theme-toggle',
