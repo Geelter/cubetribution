@@ -1,4 +1,31 @@
-<input #input type="search" placeholder="Card name" (keyup)="onInputChange(input.value)"/>
+<input #input
+       pInputText
+       class="browser-search"
+       type="search"
+       placeholder="Card name"
+       (keyup)="onInputChange(input.value)"
+/>
+
+<p-toolbar styleClass="mb-4 gap-2">
+  <ng-template pTemplate="start">
+<!--    <p-button pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="browseForCards()"></p-button>-->
+<!--    <p-button pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedCards()" [disabled]="!selectedCards || !selectedCards.length"></p-button>-->
+
+  </ng-template>
+
+  <ng-template pTemplate="center">
+    <p-selectButton [options]="layoutOptions" [(ngModel)]="selectedLayout" optionLabel="icon" optionValue="layout">
+      <ng-template let-option pTemplate>
+        <i [class]="option.icon"></i>
+      </ng-template>
+    </p-selectButton>
+  </ng-template>
+
+  <ng-template pTemplate="end">
+    <p-button pRipple label="Compare" icon="pi pi-percentage" class="p-button-help"></p-button>
+  </ng-template>
+</p-toolbar>
+
 @if (browsedCards$ | async; as cards) {
   <app-card-list class="p-border"
                  [cardList]="cards"
