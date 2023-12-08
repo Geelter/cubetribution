@@ -1,0 +1,5 @@
+@if (parsedManaCosts) {
+  @for (symbol of parsedManaCosts; track $index) {
+    <img [src]="'assets/images/card-symbols/' + symbol + '.svg'" alt="card symbol">
+  }
+}
