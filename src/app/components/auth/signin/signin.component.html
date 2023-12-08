@@ -1,1 +1,57 @@
-<p>signin works!</p>
+<form [formGroup]="signInForm"
+      (ngSubmit)="onSubmit()"
+      class="p-card flex flex-column p-4"
+>
+  <h2 class="text-center mb-5">Sign In</h2>
+
+  <span class="p-float-label mb-5">
+      <input
+        id="email"
+        type="email"
+        pInputText
+        class="w-full"
+        formControlName="email"
+      />
+      <label for="email">Email</label>
+  </span>
+
+  <span class="p-float-label">
+      <p-password
+        id="password"
+        [showClear]="true"
+        [toggleMask]="true"
+        [feedback]="false"
+        formControlName="password"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      ></p-password>
+      <label for="password">Password</label>
+  </span>
+
+  <p-button
+    type="button"
+    class="align-self-end mb-5 mt-2"
+    label="Forgot your password?"
+    [text]="true"
+  ></p-button
+  >
+
+  <p-button
+    type="submit"
+    [label]="isSubmitting ? 'Sending Request' : 'Log In'"
+    styleClass="w-full"
+    [loading]="isSubmitting"
+    [disabled]="!signInForm.valid || isSubmitting"
+  ></p-button>
+
+  <p-divider align="center">
+    <b>OR</b>
+  </p-divider>
+
+  <p-button
+    type="button"
+    label="Create an account"
+    [outlined]="true"
+    styleClass="w-full"
+  ></p-button>
+</form>
