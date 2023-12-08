@@ -1,5 +1,9 @@
 @for (card of cardList; track card.id) {
-  <app-card [card]="card" style="width: 100%; aspect-ratio: 5/7"></app-card>
+  <app-card [card]="card"
+            style="width: 100%; aspect-ratio: 5/7"
+            (cardSelected)="handleCardClick(card)"
+            [isSelected]="checkIfCardSelected(card)"
+  ></app-card>
 } @empty {
   <p>List is empty</p>
 }

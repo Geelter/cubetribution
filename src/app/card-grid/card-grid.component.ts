@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {CardComponent} from "../card/card.component";
 import {Card} from "../models/card";
 
@@ -12,4 +12,20 @@ import {Card} from "../models/card";
 })
 export class CardGridComponent {
   @Input({ required: true }) cardList!: Card[];
+  @Input({ required: true }) selectedCards!: Card[];
+  @Output() selectedCardsChange = new EventEmitter<Card[]>();
+
+  handleCardClick(card: Card) {
+    const isSelected = this.selectedCards.some(value => value.id === card.id);
+
+    this.selectedCards = isSelected
+      ? this.selectedCards.filter(val => val.id !== card.id)
+      : [...this.selectedCards, card];
+
+    this.selectedCardsChange.emit(this.selectedCards);
+  }
+
+  checkIfCardSelected(card: Card): boolean {
+    return this.selectedCards.some(value => value.id == card.id);
+  }
 }
