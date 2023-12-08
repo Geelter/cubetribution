@@ -1,0 +1,8 @@
+<app-card-table [cardList]="cardList"
+                [(selectedCards)]="selectedCards"
+                [attr.data-compact]="selectedLayout == 'grid'"
+></app-card-table>
+<app-card-grid [cardList]="cardList"
+               [(selectedCards)]="selectedCards"
+               [ngClass]="{'layout--disabled': selectedLayout != 'grid'}"
+></app-card-grid>
