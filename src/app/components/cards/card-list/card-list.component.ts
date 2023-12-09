@@ -17,4 +17,8 @@ export class CardListComponent {
   @Input({ required: true }) selectedCards!: Card[];
   @Output() selectedCardsChange = new EventEmitter<Card[]>();
   @HostBinding('class.p-border') borderApplied = true;
+
+  handleSelectionChange(event: any) {
+    this.selectedCardsChange.emit(event);
+  }
 }

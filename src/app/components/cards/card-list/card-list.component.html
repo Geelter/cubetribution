@@ -1,8 +1,10 @@
 <app-card-table [cardList]="cardList"
-                [(selectedCards)]="selectedCards"
+                [selectedCards]="selectedCards"
                 [attr.data-compact]="selectedLayout == 'grid'"
+                (selectedCardsChange)="handleSelectionChange($event)"
 ></app-card-table>
 <app-card-grid [cardList]="cardList"
-               [(selectedCards)]="selectedCards"
+               [selectedCards]="selectedCards"
                [ngClass]="{'layout--disabled': selectedLayout != 'grid'}"
+               (selectedCardsChange)="handleSelectionChange($event)"
 ></app-card-grid>
