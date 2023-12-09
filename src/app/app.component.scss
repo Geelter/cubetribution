@@ -1,11 +1,21 @@
 :host {
-  display: block;
+  display: grid;
+  grid-template-columns: [full-width-start] minmax(1rem, 1fr) [content-start] minmax(0, 80rem) [content-end] minmax(1rem, 1fr) [full-width-end];
+  grid-template-rows: auto 1fr;
+  place-content: stretch;
+
   height: 100svh;
 }
 
 .navbar {
+  grid-column: full-width;
   position: sticky;
   top: 0;
   left: 0;
   z-index: 999;
+}
+
+section {
+  grid-column: content;
+  max-width: 80rem;
 }
