@@ -6,11 +6,12 @@ import {InputTextModule} from "primeng/inputtext";
 import {PasswordModule} from "primeng/password";
 import {ButtonModule} from "primeng/button";
 import {DividerModule} from "primeng/divider";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, PasswordModule, ButtonModule, DividerModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, PasswordModule, ButtonModule, DividerModule, RouterLink],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
