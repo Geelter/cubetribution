@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {Router} from "@angular/router";
 import {SupabaseClientService} from "./supabase-client.service";
+import {AuthChangeEvent, Session} from "@supabase/supabase-js";
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,13 @@ export class SupabaseAuthService {
         summary: 'SignOut failed',
         detail: error.message
       });
+      return;
     }
+
+    this.router.navigate(['/signin']);
+  }
+
+  authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
+    return this.supabase.client.auth.onAuthStateChange(callback);
   }
 }
