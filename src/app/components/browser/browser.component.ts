@@ -52,6 +52,10 @@ export class BrowserComponent {
   }
 
   /* toolbar functions */
+  addSelectionToCollection() {
+
+  }
+
   // deleteSelectedCards() {
   //   //TODO: This should go through Supabase first. If successful finish, if not give error message and revert
   //   this.confirmationService.confirm({
