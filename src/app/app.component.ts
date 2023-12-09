@@ -3,8 +3,9 @@ import {CommonModule} from '@angular/common';
 import {RouterOutlet} from '@angular/router';
 import {MenuItem, PrimeNGConfig} from "primeng/api";
 import {MenubarModule} from "primeng/menubar";
-import {ThemeToggleComponent} from "./theme-toggle/theme-toggle.component";
+import {ThemeToggleComponent} from "./components/theme-toggle/theme-toggle.component";
 import {ToastModule} from "primeng/toast";
+import {SupabaseAuthService} from "./services/supabase/supabase-auth.service";
 
 @Component({
   selector: 'app-root',
@@ -15,29 +16,59 @@ import {ToastModule} from "primeng/toast";
 })
 export class AppComponent implements OnInit {
   primengConfig = inject(PrimeNGConfig);
+  authService = inject(SupabaseAuthService);
 
   title = 'cubetribution';
+
+  private readonly authenticatedItems = [
+    {
+      label: 'Browse',
+      routerLink: '/browse'
+    },
+    {
+      label: 'Cubes',
+      routerLink: '/cubes'
+    },
+    {
+      label: 'Collections',
+      routerLink: '/collections'
+    },
+    {
+      label: 'Sign Out',
+      icon: 'pi pi-power-off',
+      command: () => {
+        this.authService.signOut();
+      }
+    }
+  ];
+
+  private readonly unauthenticatedItems = [
+    {
+      label: 'Stats',
+      routerLink: '/stats'
+    },
+    {
+      label: 'Cubes',
+      routerLink: '/cubes'
+    },
+    {
+      label: 'Sign In',
+      icon: 'pi pi-user',
+      routerLink: '/signin'
+    }
+  ];
 
   menuItems: MenuItem[];
 
   ngOnInit() {
     this.primengConfig.ripple = true;
+
+    this.authService.authChanges((event, session) => {
+      this.menuItems = session ? this.authenticatedItems : this.unauthenticatedItems;
+    })
   }
 
   constructor() {
-    this.menuItems = [
-      {
-        label: 'Browse',
-        routerLink: '/browse'
-      },
-      {
-        label: 'Cubes',
-        routerLink: '/cubes'
-      },
-      {
-        label: 'Collections',
-        routerLink: '/collections'
-      }
-    ];
+    this.menuItems = this.unauthenticatedItems;
   }
 }
