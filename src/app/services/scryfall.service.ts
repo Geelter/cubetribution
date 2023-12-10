@@ -15,8 +15,10 @@ export class ScryfallService {
   private readonly http = inject(HttpClient);
 
   getCardsForAutocomplete(param: string): Observable<Card[]> {
+    const autocompleteURL = `${this.BASE_API_URL}/autocomplete?q=${param}`;
+
     return this.http.get<ScryfallAutocompleteResponse>(
-        this.BASE_API_URL + '/autocomplete?q=' + param,
+        autocompleteURL,
         { headers: {'Content-Type': 'application/json'}}
     ).pipe(
         switchMap((value, _) =>
@@ -59,18 +61,20 @@ export class ScryfallService {
     const identifiers = idSlice.map(id => {
       const obj: any = {};
 
-      let identifier = '';
+      let identifier = id.trim();
+      const isID = idPattern.test(identifier);
 
-      if (idPattern.test(id)) {
-        identifier = id;
-      } else if (dualNamePattern.test(id)) {
-        const parts = id.split(dualNamePattern);
+      if (dualNamePattern.test(identifier)) {
+        const parts = identifier.split(dualNamePattern);
         identifier = parts[0].trim();
-      } else {
-        identifier = id;
       }
 
-      idPattern.test(identifier) ? obj.id = identifier : obj.name = identifier;
+      if (isID) {
+        obj.id = identifier;
+      } else {
+        obj.name = identifier;
+      }
+
       return obj;
     });
 
