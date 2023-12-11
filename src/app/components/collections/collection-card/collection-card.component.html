@@ -1,0 +1,11 @@
+<div class="collection-container" (click)="handleCollectionClick()">
+  <div class="thumbnail">
+    <img [ngSrc]="collection.thumbnailURI" alt="Collection thumbnail" fill="contain">
+  </div>
+  <p class="label">{{collection.name}}</p>
+</div>
+@if (deleteMode) {
+  <div class="delete-overlay">
+    <p-button icon="pi pi-trash" severity="danger" (onClick)="handleDeleteClick()"></p-button>
+  </div>
+}
