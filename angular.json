@@ -110,6 +110,13 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@netlify-builder/deploy:deploy",
+          "options": {
+            "outputPath": "dist/cubetribution",
+            "siteId": "2eae71d6-0c67-4805-8120-58d9cc1a24a7"
+          }
         }
       }
     }
