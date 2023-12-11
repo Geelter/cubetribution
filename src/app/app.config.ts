@@ -15,3 +15,10 @@ export const appConfig: ApplicationConfig = {
     ConfirmationService,
   ]
 };
+
+export const dialogBreakpoints = {
+  '960px': '60vw',
+  '800px': '70vw',
+  '700px': '80vw',
+  '600px': '95vw'
+};
