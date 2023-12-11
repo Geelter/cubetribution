@@ -3,6 +3,7 @@ import {CollectionGridComponent} from "./components/collections/collection-grid/
 import {BrowserComponent} from "./components/browser/browser.component";
 import {SigninComponent} from "./components/auth/signin/signin.component";
 import {SignupComponent} from "./components/auth/signup/signup.component";
+import {CollectionComponent} from "./components/collections/collection/collection.component";
 
 export const routes: Routes = [
   {
@@ -16,6 +17,10 @@ export const routes: Routes = [
   {
     path: 'collections',
     component: CollectionGridComponent,
+  },
+  {
+    path: 'collection-detail',
+    component: CollectionComponent,
   },
   {
     path: 'browse',
