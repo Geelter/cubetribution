@@ -1,3 +1,55 @@
-@for (collection of collectionList; track collection.id) {
-  <app-collection [collection]="collection"></app-collection>
+<p-toolbar styleClass="mb-4 gap-2">
+  <ng-template pTemplate="start">
+    <p-button label="New" icon="pi pi-plus" (onClick)="showDialog()"></p-button>
+  </ng-template>
+
+  <ng-template pTemplate="center">
+    <p-button [label]="deleteMode ? 'Exit delete mode' : 'Delete mode'" icon="pi pi-trash" (onClick)="toggleDeleteMode()"></p-button>
+  </ng-template>
+
+  <ng-template pTemplate="end">
+    <p-button label="Refresh" icon="pi pi-refresh" (onClick)="refreshCollections()"></p-button>
+  </ng-template>
+</p-toolbar>
+
+@for (collection of collectionList$ | async; track collection.id) {
+  <app-collection-card [collection]="collection"
+                       (collectionClicked)="selectCollection(collection)"
+                       (deleteClicked)="confirmDelete(collection)"
+                       [deleteMode]="deleteMode"
+  ></app-collection-card>
 }
+
+<p-confirmDialog [style]="{width: '40rem'}"
+                 [breakpoints]="dialogBreakpoints"
+></p-confirmDialog>
+<p-dialog header="Header"
+          [(visible)]="dialogVisible"
+          [breakpoints]="dialogBreakpoints"
+          [style]="{ width: '40rem' }"
+          [modal]="true"
+>
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">New collection</span>
+  </ng-template>
+  <form [formGroup]="collectionForm"
+        (ngSubmit)="createCollection()"
+  >
+    <span class="p-float-label mb-5">
+      <input
+        id="name"
+        type="text"
+        pInputText
+        class="w-full"
+        formControlName="name"
+      />
+      <label for="name">Name</label>
+    </span>
+
+    <p-button type="submit"
+              label="Create"
+              styleClass="w-full"
+              [disabled]="!collectionForm.valid"
+    ></p-button>
+  </form>
+</p-dialog>
