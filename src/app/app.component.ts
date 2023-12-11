@@ -6,6 +6,7 @@ import {MenubarModule} from "primeng/menubar";
 import {ThemeToggleComponent} from "./components/theme-toggle/theme-toggle.component";
 import {ToastModule} from "primeng/toast";
 import {SupabaseAuthService} from "./services/supabase/supabase-auth.service";
+import {CollectionsService} from "./services/collections.service";
 
 @Component({
   selector: 'app-root',
@@ -17,13 +18,18 @@ import {SupabaseAuthService} from "./services/supabase/supabase-auth.service";
 export class AppComponent implements OnInit {
   primengConfig = inject(PrimeNGConfig);
   authService = inject(SupabaseAuthService);
+  collectionsService = inject(CollectionsService);
 
   title = 'cubetribution';
 
   private readonly authenticatedItems = [
     {
+      label: 'Stats',
+      routerLink: '/stats'
+    },
+    {
       label: 'Browse',
-      routerLink: '/browse'
+      routerLink: '/browse',
     },
     {
       label: 'Cubes',
@@ -65,6 +71,9 @@ export class AppComponent implements OnInit {
 
     this.authService.authChanges((event, session) => {
       this.menuItems = session ? this.authenticatedItems : this.unauthenticatedItems;
+      if (!session) {
+        this.collectionsService.clearFetchedCollections();
+      }
     })
   }
 

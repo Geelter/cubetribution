@@ -19,3 +19,7 @@ section {
   grid-column: content;
   max-width: 80rem;
 }
+
+::ng-deep .p-toast {
+  width: min(90vw, 25rem);
+}

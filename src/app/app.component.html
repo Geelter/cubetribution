@@ -1,7 +1,4 @@
 <p-menubar class="navbar" [model]="menuItems">
-  <ng-template pTemplate="start">
-    <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="40" class="mr-2" />
-  </ng-template>
   <ng-template pTemplate="end">
     <app-theme-toggle></app-theme-toggle>
   </ng-template>
@@ -9,4 +6,4 @@
 <section>
   <router-outlet></router-outlet>
 </section>
-<p-toast key="global" [baseZIndex]="9999"></p-toast>
+<p-toast key="global" position="top-right" [baseZIndex]="9999"></p-toast>
