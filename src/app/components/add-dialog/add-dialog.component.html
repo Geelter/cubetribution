@@ -1,0 +1,46 @@
+<p-dialog header="Header"
+          [(visible)]="dialogVisible"
+          [breakpoints]="dialogBreakpoints"
+          [style]="{ width: '40rem' }"
+          [modal]="true"
+          (onHide)="dialogVisibleChange.emit(false)"
+>
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">Add to collection</span>
+  </ng-template>
+  @if (collections$ | async; as collections) {
+    <p-listbox [options]="collections"
+               [(ngModel)]="selectedCollection"
+               optionLabel="name"
+               styleClass="mb-5"
+    ></p-listbox>
+    <p-button label="Add to selected collection"
+              [disabled]="!selectedCollection"
+              (onClick)="addSelectionToCollection()"
+              styleClass="w-full"
+    ></p-button>
+  }
+
+  <p-divider align="center">
+    <b>OR</b>
+  </p-divider>
+
+  <form [formGroup]="collectionForm"
+        (ngSubmit)="createCollectionWithSelection()"
+  >
+    <span class="p-float-label mb-5">
+      <input
+        id="name"
+        type="text"
+        pInputText
+        class="w-full"
+        formControlName="name"
+      />
+      <label for="name">New Collection</label>
+    </span>
+
+    <p-button label="Create with selection"
+              styleClass="w-full"
+              [disabled]="!collectionForm.valid"></p-button>
+  </form>
+</p-dialog>
