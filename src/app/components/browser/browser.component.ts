@@ -8,21 +8,22 @@ import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {RippleModule} from "primeng/ripple";
 import {ToolbarModule} from "primeng/toolbar";
-import {ConfirmationService, MessageService} from "primeng/api";
 import {SelectButtonModule} from "primeng/selectbutton";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CardListComponent} from "../cards/card-list/card-list.component";
+import {DropdownModule} from "primeng/dropdown";
+import {DialogModule} from "primeng/dialog";
+import {ListboxModule} from "primeng/listbox";
+import {AddDialogComponent} from "../add-dialog/add-dialog.component";
 
 @Component({
   selector: 'app-browser',
   standalone: true,
-  imports: [CommonModule, InputTextModule, ButtonModule, RippleModule, ToolbarModule, SelectButtonModule, FormsModule, CardListComponent],
+  imports: [CommonModule, InputTextModule, ButtonModule, RippleModule, ToolbarModule, SelectButtonModule, FormsModule, CardListComponent, DropdownModule, DialogModule, ReactiveFormsModule, ListboxModule, AddDialogComponent],
   templateUrl: './browser.component.html',
   styleUrls: ['./browser.component.scss']
 })
 export class BrowserComponent {
-  private messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService);
   private scryfall = inject(ScryfallService);
 
   private inputValue = new BehaviorSubject<string | undefined>(undefined);
@@ -40,6 +41,7 @@ export class BrowserComponent {
 
   browsedCards$: Observable<Card[]> | undefined;
   selectedCards: Card[] = [];
+  dialogVisible: boolean = false;
 
   selectedLayout: string = 'grid';
   layoutOptions = [
@@ -47,40 +49,17 @@ export class BrowserComponent {
     { icon: 'pi pi-bars', layout: 'table' }
   ];
 
+  selectedCardPool: string = 'results';
+  cardPoolOptions = [
+    { label: 'Search', cardPool: 'results' },
+    { label: 'Selection', cardPool: 'selection' }
+  ];
+
+  showDialog() {
+    this.dialogVisible = true;
+  }
+
   onInputChange(input: string) {
       this.inputValue.next(input);
   }
-
-  /* toolbar functions */
-  addSelectionToCollection() {
-
-  }
-
-  // deleteSelectedCards() {
-  //   //TODO: This should go through Supabase first. If successful finish, if not give error message and revert
-  //   this.confirmationService.confirm({
-  //     message: 'Are you sure you want to delete the selected cards?',
-  //     header: 'Confirm',
-  //     icon: 'pi pi-exclamation-triangle',
-  //     accept: () => {
-  //       this.cardList = this.cardList.filter((card) => !this.selectedCards?.includes(card));
-  //       this.selectedCards = [];
-  //       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cards Deleted', life: 3000 });
-  //     }
-  //   });
-  // }
-  //
-  // deleteCard(card: Card) {
-  //   //TODO: This should go through Supabase first. If successful finish, if not give error message and revert
-  //   this.confirmationService.confirm({
-  //     message: 'Are you sure you want to delete ' + card.name + '?',
-  //     header: 'Confirm',
-  //     icon: 'pi pi-exclamation-triangle',
-  //     accept: () => {
-  //       this.cardList = this.cardList.filter((val) => val.id !== card.id);
-  //       this.selectedCards = [];
-  //       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-  //     }
-  //   });
-  // }
 }
