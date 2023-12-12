@@ -4,6 +4,7 @@ import {Card} from "../../models/card";
 import {MessageService} from "primeng/api";
 import {Collection} from "../../models/collection";
 import {Tables} from "../../models/supabase";
+import {Cube} from "../../models/cube";
 
 @Injectable({
   providedIn: 'root'
@@ -139,5 +140,32 @@ export class SupabaseDatabaseService {
     }
 
     return error;
+  }
+
+  async fetchCubes() {
+    const { data, error } = await this.supabase.client
+      .from('cubes')
+      .select()
+      .returns<Tables<'cubes'>[]>();
+
+    const cubes = data?.map(cube => new Cube(cube));
+
+    if (error) {
+      this.messageService.add({
+        key: 'global',
+        severity: 'error',
+        summary: 'Fetching cubes failed',
+        detail: error.message
+      });
+      return;
+    } else {
+      this.messageService.add({
+        key: 'global',
+        severity: 'success',
+        summary: 'Cubes fetched'
+      })
+    }
+
+    return cubes;
   }
 }
