@@ -29,9 +29,17 @@ export class SupabaseAuthService {
     this.router.navigate(['/browse']);
   }
 
-  async signUpWithEmail(email: string, password: string) {
+  async signUpWithEmail(username: string, email: string, password: string) {
     const { data, error } =
-      await this.supabase.client.auth.signUp({ email: email, password: password });
+      await this.supabase.client.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            username: username
+          }
+        }
+      });
 
     if (error) {
       this.messageService.add({

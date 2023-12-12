@@ -26,9 +26,9 @@ export class SignupComponent {
   async onSubmit() {
     this.isSubmitting = true;
 
-    const { email, password } = this.signUpForm.value;
+    const { username, email, password } = this.signUpForm.value;
 
-    await this.authService.signUpWithEmail(email, password);
+    await this.authService.signUpWithEmail(username, email, password);
 
     this.isSubmitting = false;
   }
@@ -52,6 +52,7 @@ export class SignupComponent {
 
   constructor() {
     this.signUpForm = this.formBuilder.group({
+      username: ['', [Validators.required, Validators.minLength(4)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [
         Validators.required,
