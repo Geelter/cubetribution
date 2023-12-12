@@ -79,6 +79,48 @@ export interface Database {
           }
         ]
       }
+      donations: {
+        Row: {
+          accepted: boolean
+          card_ids: string[]
+          created_at: string
+          cube_id: number
+          id: number
+          user_id: string
+        }
+        Insert: {
+          accepted?: boolean
+          card_ids: string[]
+          created_at?: string
+          cube_id: number
+          id?: number
+          user_id: string
+        }
+        Update: {
+          accepted?: boolean
+          card_ids?: string[]
+          created_at?: string
+          cube_id?: number
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donations_cube_id_fkey"
+            columns: ["cube_id"]
+            isOneToOne: false
+            referencedRelation: "cubes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "donations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           id: string
@@ -110,7 +152,17 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_isadmin_for_authenticated_user: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_restricted_cls: {
+        Args: {
+          _id: string
+          _restricted_field: boolean
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
