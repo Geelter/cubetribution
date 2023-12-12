@@ -51,7 +51,6 @@ export interface Database {
           id: number
           name: string
           thumbnail: string
-          user_id: string
         }
         Insert: {
           card_ids?: string[]
@@ -59,7 +58,6 @@ export interface Database {
           id?: number
           name: string
           thumbnail?: string
-          user_id?: string
         }
         Update: {
           card_ids?: string[]
@@ -67,17 +65,8 @@ export interface Database {
           id?: number
           name?: string
           thumbnail?: string
-          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "cubes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       donations: {
         Row: {
