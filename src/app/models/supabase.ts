@@ -81,19 +81,19 @@ export interface Database {
       }
       profiles: {
         Row: {
-          first_name: string | null
           id: string
-          last_name: string | null
+          isadmin: boolean
+          username: string
         }
         Insert: {
-          first_name?: string | null
           id: string
-          last_name?: string | null
+          isadmin?: boolean
+          username: string
         }
         Update: {
-          first_name?: string | null
           id?: string
-          last_name?: string | null
+          isadmin?: boolean
+          username?: string
         }
         Relationships: [
           {
