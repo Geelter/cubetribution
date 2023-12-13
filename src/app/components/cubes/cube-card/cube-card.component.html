@@ -1,1 +1,6 @@
-<p>cube-card works!</p>
+<div class="cube-container" (click)="handleCubeClick()">
+  <div class="thumbnail">
+    <img [ngSrc]="cube.thumbnailURI" alt="Cube thumbnail" fill="contain">
+  </div>
+  <p class="label">{{cube.name}}</p>
+</div>
