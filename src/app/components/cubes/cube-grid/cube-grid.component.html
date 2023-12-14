@@ -3,3 +3,9 @@
     <p-button label="Refresh" icon="pi pi-refresh" (onClick)="refreshCubes()"></p-button>
   </ng-template>
 </p-toolbar>
+
+@for (cube of cubesList$ | async; track cube.id) {
+  <app-cube-card [cube]="cube"
+                 (cubeClicked)="selectCube(cube)"
+  ></app-cube-card>
+}

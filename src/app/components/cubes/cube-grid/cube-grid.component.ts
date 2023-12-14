@@ -5,11 +5,12 @@ import {CubesService} from "../../../services/cubes.service";
 import {Cube} from "../../../models/cube";
 import {ButtonModule} from "primeng/button";
 import {ToolbarModule} from "primeng/toolbar";
+import {CubeCardComponent} from "../cube-card/cube-card.component";
 
 @Component({
   selector: 'app-cube-grid',
   standalone: true,
-  imports: [CommonModule, ButtonModule, ToolbarModule],
+  imports: [CommonModule, ButtonModule, ToolbarModule, CubeCardComponent],
   templateUrl: './cube-grid.component.html',
   styleUrl: './cube-grid.component.scss'
 })
