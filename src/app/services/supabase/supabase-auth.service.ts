@@ -12,6 +12,12 @@ export class SupabaseAuthService {
   private readonly messageService = inject(MessageService);
   private readonly router = inject(Router);
 
+  async getSession() {
+    const data = await this.supabase.client.auth.getSession();
+
+    return data.data.session;
+  }
+
   async signInWithEmail(email: string, password: string) {
     const { data, error } =
       await this.supabase.client.auth.signInWithPassword({ email: email, password: password});
@@ -67,7 +73,7 @@ export class SupabaseAuthService {
       return;
     }
 
-    this.router.navigate(['/signin']);
+    this.router.navigate(['/auth/signin']);
   }
 
   authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
