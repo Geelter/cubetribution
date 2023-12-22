@@ -33,11 +33,11 @@ export class AppComponent implements OnInit {
     },
     {
       label: 'Cubes',
-      routerLink: '/cubes'
+      routerLink: '/cube/list'
     },
     {
       label: 'Collections',
-      routerLink: '/collections'
+      routerLink: '/collection/list'
     },
     {
       label: 'Sign Out',
@@ -55,12 +55,12 @@ export class AppComponent implements OnInit {
     },
     {
       label: 'Cubes',
-      routerLink: '/cubes'
+      routerLink: '/cube/list'
     },
     {
       label: 'Sign In',
       icon: 'pi pi-user',
-      routerLink: '/signin'
+      routerLink: '/auth/signin'
     }
   ];
 
