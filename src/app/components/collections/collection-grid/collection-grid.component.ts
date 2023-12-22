@@ -12,11 +12,12 @@ import {Router} from "@angular/router";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {dialogBreakpoints} from "../../../app.config";
+import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-collection-card-grid',
   standalone: true,
-  imports: [CommonModule, CollectionCardComponent, ToolbarModule, ButtonModule, DialogModule, ReactiveFormsModule, InputTextModule, ConfirmDialogModule],
+  imports: [CommonModule, CollectionCardComponent, ToolbarModule, ButtonModule, DialogModule, ReactiveFormsModule, InputTextModule, ConfirmDialogModule, LoadingSpinnerComponent],
   templateUrl: './collection-grid.component.html',
   styleUrl: './collection-grid.component.scss'
 })
@@ -27,6 +28,7 @@ export class CollectionGridComponent {
   private readonly confirmationService = inject(ConfirmationService);
   private readonly collectionsService = inject(CollectionsService);
   collectionList$ = this.collectionsService.collections$;
+  fetchInProgress$ = this.collectionsService.requestInProgress$;
 
   collectionForm: FormGroup;
   dialogVisible: boolean = false;
@@ -55,7 +57,7 @@ export class CollectionGridComponent {
 
   selectCollection(collection: Collection) {
     this.collectionsService.selectCollection(collection);
-    this.router.navigate(['collection-detail']);
+    this.router.navigate([`/collection/detail`]);
   }
 
   confirmDelete(collection: Collection) {

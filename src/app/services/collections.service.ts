@@ -23,6 +23,10 @@ export class CollectionsService {
   private selectedCollection = new BehaviorSubject<Collection | null>(null);
   selectedCollection$ = this.selectedCollection.asObservable();
 
+  //TODO: Rewrite the code for flipping the subject value into something more elegant
+  private requestInProgress = new BehaviorSubject<boolean>(false);
+  requestInProgress$ = this.requestInProgress.asObservable();
+
   async initializeCollections() {
     const collectionsValue = this.collections.getValue();
 
@@ -32,7 +36,11 @@ export class CollectionsService {
   }
 
   async getCollections() {
+    this.requestInProgress.next(true);
+
     const collections = await this.databaseService.fetchCollections();
+
+    this.requestInProgress.next(false);
 
     if (collections) {
       this.collections.next(collections);
@@ -44,6 +52,8 @@ export class CollectionsService {
   }
 
   async createCollection(name: string, cards: Card[] = []) {
+    this.requestInProgress.next(true);
+
     const createdCollection = await this.databaseService.createCollection(name, cards);
 
     if (createdCollection) {
@@ -51,26 +61,38 @@ export class CollectionsService {
 
       this.collections.next(currentCollections.set(createdCollection.id, createdCollection));
     }
+
+    this.requestInProgress.next(false);
   }
 
   async addCardsToCollection(collection: Collection, cards: Card[]) {
+    this.requestInProgress.next(true);
+
     const idsToAdd = cards
       .map(card => card.id)
       .filter(id => !collection.cardIDs.includes(id));
 
     const appendedIDs = [...idsToAdd, ...collection.cardIDs];
 
-    this.updateCollectionInState(collection, appendedIDs);
+    await this.updateCollectionInState(collection, appendedIDs);
+
+    this.requestInProgress.next(false);
   }
 
   async removeCardsFromCollection(collection: Collection, cards: Card[]) {
+    this.requestInProgress.next(true);
+
     const idsToRemove = cards.map(card => card.id);
     const filteredIDs = collection.cardIDs.filter(id => !idsToRemove.includes(id));
 
-    this.updateCollectionInState(collection, filteredIDs);
+    await this.updateCollectionInState(collection, filteredIDs);
+
+    this.requestInProgress.next(false);
   }
 
   async deleteCollection(collection: Collection) {
+    this.requestInProgress.next(true);
+
     const error = await this.databaseService.deleteCollection(collection.id);
 
     if (!error) {
@@ -80,6 +102,8 @@ export class CollectionsService {
 
       this.collections.next(collections);
     }
+
+    this.requestInProgress.next(false);
   }
 
   private async updateCollectionInState(collection: Collection, cardIDs: string[]) {

@@ -54,3 +54,7 @@
     ></p-button>
   </form>
 </p-dialog>
+
+@if (fetchInProgress$ | async) {
+  <app-loading-spinner></app-loading-spinner>
+}
