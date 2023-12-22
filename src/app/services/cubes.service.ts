@@ -15,6 +15,10 @@ export class CubesService {
   private selectedCube = new BehaviorSubject<Cube | null>(null);
   selectedCube$ = this.selectedCube.asObservable();
 
+  //TODO: Rewrite the code for flipping the subject value into something more elegant
+  private requestInProgress = new BehaviorSubject<boolean>(false);
+  requestInProgress$ = this.requestInProgress.asObservable();
+
   async initializeCubes() {
     const cubesValue = this.cubes.getValue();
 
@@ -24,11 +28,15 @@ export class CubesService {
   }
 
   async getCubes() {
+    this.requestInProgress.next(true);
+
     const cubes = await this.databaseService.fetchCubes();
 
     if (cubes) {
       this.cubes.next(cubes);
     }
+
+    this.requestInProgress.next(false);
   }
 
   selectCube(cube: Cube) {

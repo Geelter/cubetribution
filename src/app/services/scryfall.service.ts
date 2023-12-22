@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Card} from "../models/card";
-import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
+import {BehaviorSubject, catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {ScryfallCollectionResponse} from "../models/scryfall-collection-response";
 import {ScryfallAutocompleteResponse} from "../models/scryfall-autocomplete-response";
 
@@ -13,6 +13,10 @@ export class ScryfallService {
   private readonly BASE_API_URL = 'https://api.scryfall.com/cards';
 
   private readonly http = inject(HttpClient);
+
+  //TODO: Rewrite the code for flipping the subject value into something more elegant
+  private fetchInProgress = new BehaviorSubject<boolean>(false);
+  fetchInProgress$ = this.fetchInProgress.asObservable();
 
   getCardsForAutocomplete(param: string): Observable<Card[]> {
     const autocompleteURL = `${this.BASE_API_URL}/autocomplete?q=${param}`;
@@ -27,6 +31,8 @@ export class ScryfallService {
     );
   }
   getCardsForIDs(ids: string[]): Observable<Card[]> {
+    this.fetchInProgress.next(true);
+
     const idSlices = this.sliceIDArray(ids);
     const payloads = idSlices.map(
       slice => this.convertIDSliceToScryfallPayload(slice)
@@ -36,12 +42,17 @@ export class ScryfallService {
     return forkJoin(urls).pipe(
       tap(response => console.log(response)),
       switchMap(responses =>
-        of(responses.flatMap(response =>
-          response.data.map(value => new Card(value))
+        of(responses.flatMap(response => {
+            this.fetchInProgress.next(false);
+            return response.data.map(value => new Card(value))
+          }
         ))
       ),
       catchError(
-        response => throwError(() => new Error('Error fetching card collection'))
+        response => {
+          this.fetchInProgress.next(false);
+          return throwError(() => new Error('Error fetching card collection'))
+        }
       )
     );
   }
