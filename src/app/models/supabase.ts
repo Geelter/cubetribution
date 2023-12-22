@@ -23,7 +23,7 @@ export interface Database {
           created_at?: string
           id?: number
           name: string
-          thumbnail?: string
+          thumbnail: string
           user_id?: string
         }
         Update: {
@@ -57,7 +57,7 @@ export interface Database {
           created_at?: string
           id?: number
           name: string
-          thumbnail?: string
+          thumbnail: string
         }
         Update: {
           card_ids?: string[]
@@ -75,6 +75,7 @@ export interface Database {
           created_at: string
           cube_id: number
           id: number
+          thumbnail: string
           user_id: string
         }
         Insert: {
@@ -83,6 +84,7 @@ export interface Database {
           created_at?: string
           cube_id: number
           id?: number
+          thumbnail?: string
           user_id: string
         }
         Update: {
@@ -91,6 +93,7 @@ export interface Database {
           created_at?: string
           cube_id?: number
           id?: number
+          thumbnail?: string
           user_id?: string
         }
         Relationships: [
