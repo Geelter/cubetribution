@@ -32,7 +32,11 @@
       <td><app-mana-cost [manaCost]="card.manaCost"></app-mana-cost></td>
       <td>{{ card.cmc }}
       <td>
-<!--        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCard(card)"></button>-->
+        <p-button icon="pi pi-info"
+                  severity="info"
+                  [rounded]="true"
+                  (onClick)="redirectToScryfall(card.scryfallURI)"
+        ></p-button>
       </td>
     </tr>
   </ng-template>

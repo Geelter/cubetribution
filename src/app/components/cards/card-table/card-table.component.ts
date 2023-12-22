@@ -106,4 +106,8 @@ export class CardTableComponent {
   emitSelectedCards() {
     this.selectedCardsChange.emit(this.selectedCards);
   }
+
+  redirectToScryfall(link: string) {
+    window.open(link);
+  }
 }
