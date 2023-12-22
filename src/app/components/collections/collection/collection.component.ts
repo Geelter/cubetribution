@@ -15,11 +15,12 @@ import {DialogModule} from "primeng/dialog";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {dialogBreakpoints} from "../../../app.config";
+import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-collection',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CardListComponent, SelectButtonModule, SharedModule, ToolbarModule, FormsModule, DialogModule, ConfirmDialogModule],
+  imports: [CommonModule, ButtonModule, CardListComponent, SelectButtonModule, SharedModule, ToolbarModule, FormsModule, DialogModule, ConfirmDialogModule, LoadingSpinnerComponent],
   templateUrl: './collection.component.html',
   styleUrl: './collection.component.scss'
 })
@@ -31,6 +32,7 @@ export class CollectionComponent {
 
   collection: Collection | null = null;
   collectionCards: Card[] = [];
+  requestInProgress$ = this.collectionsService.requestInProgress$;
 
   selectedCards: Card[] = [];
 
