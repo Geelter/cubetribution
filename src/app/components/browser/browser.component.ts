@@ -15,11 +15,12 @@ import {DropdownModule} from "primeng/dropdown";
 import {DialogModule} from "primeng/dialog";
 import {ListboxModule} from "primeng/listbox";
 import {AddDialogComponent} from "../add-dialog/add-dialog.component";
+import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-browser',
   standalone: true,
-  imports: [CommonModule, InputTextModule, ButtonModule, RippleModule, ToolbarModule, SelectButtonModule, FormsModule, CardListComponent, DropdownModule, DialogModule, ReactiveFormsModule, ListboxModule, AddDialogComponent],
+  imports: [CommonModule, InputTextModule, ButtonModule, RippleModule, ToolbarModule, SelectButtonModule, FormsModule, CardListComponent, DropdownModule, DialogModule, ReactiveFormsModule, ListboxModule, AddDialogComponent, LoadingSpinnerComponent],
   templateUrl: './browser.component.html',
   styleUrls: ['./browser.component.scss']
 })
@@ -40,6 +41,7 @@ export class BrowserComponent {
       ).subscribe();
 
   browsedCards$: Observable<Card[]> | undefined;
+  fetchInProgress$ = this.scryfall.fetchInProgress$;
   selectedCards: Card[] = [];
   dialogVisible: boolean = false;
 

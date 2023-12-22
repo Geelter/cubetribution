@@ -37,3 +37,6 @@
 
   <app-add-dialog [(dialogVisible)]="dialogVisible" [cardSelection]="selectedCards"></app-add-dialog>
 }
+@if (fetchInProgress$ | async) {
+  <app-loading-spinner></app-loading-spinner>
+}
