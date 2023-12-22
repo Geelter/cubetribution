@@ -28,6 +28,7 @@ export class Card {
   // private _type_line: string;
   // private _colors: string[]; /* ["R", "B"] */
   private readonly _rarity: string;
+  private readonly _scryfallURI: string;
 
   constructor(cardData: any) {
     this._id = cardData.id;
@@ -37,6 +38,7 @@ export class Card {
     this._mana_cost = cardData.mana_cost;
     this._cmc = cardData.cmc;
     this._rarity = cardData.rarity;
+    this._scryfallURI = cardData.scryfall_uri;
   }
 
   public get id() {
@@ -79,6 +81,10 @@ export class Card {
 
   public get rarity() {
     return this._rarity;
+  }
+
+  public get scryfallURI() {
+    return this._scryfallURI;
   }
 
   public get isDoubleSided() {
