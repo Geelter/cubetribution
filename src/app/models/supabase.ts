@@ -75,6 +75,7 @@ export interface Database {
           created_at: string
           cube_id: number
           id: number
+          name: string
           thumbnail: string
           user_id: string
         }
@@ -84,6 +85,7 @@ export interface Database {
           created_at?: string
           cube_id: number
           id?: number
+          name: string
           thumbnail?: string
           user_id: string
         }
@@ -93,6 +95,7 @@ export interface Database {
           created_at?: string
           cube_id?: number
           id?: number
+          name?: string
           thumbnail?: string
           user_id?: string
         }
