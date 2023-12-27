@@ -54,4 +54,20 @@ export class DonationsService {
 
     this.requestInProgress.next(false);
   }
+
+  async deleteDonation(donation: Donation) {
+    this.requestInProgress.next(true);
+
+    const error = await this.databaseService.deleteDonation(donation);
+
+    if (!error) {
+      const filteredDonations = this.donations.getValue()?.filter(
+        val => val.id != donation.id
+      ) ?? [];
+
+      this.donations.next([...filteredDonations]);
+    }
+
+    this.requestInProgress.next(false);
+  }
 }
