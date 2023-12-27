@@ -178,7 +178,7 @@ export class SupabaseDatabaseService {
 
     const { data, error } = await this.supabase.client
       .from('donations')
-      .insert({ name: `${cube.name} donation`, card_ids: filteredCards })
+      .insert({ name: `${cube.name} donation`, cube_id: cube.id, card_ids: filteredCards })
       .select()
       .returns<Tables<'donations'>>()
       .single();
