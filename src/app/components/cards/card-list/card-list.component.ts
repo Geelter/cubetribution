@@ -1,8 +1,11 @@
 import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {CardGridComponent} from "../card-grid/card-grid.component";
 import {CardTableComponent} from "../card-table/card-table.component";
 import {Card} from "../../../models/card";
+import {ButtonModule} from "primeng/button";
+import {SharedModule} from "primeng/api";
+import {TableModule} from "primeng/table";
 
 @Component({
   selector: 'app-card-list',
@@ -15,6 +18,7 @@ export class CardListComponent {
   @Input({ required: true }) selectedLayout!: string;
   @Input({ required: true }) cardList!: Card[];
   @Input({ required: true }) selectedCards!: Card[];
+  @Input() selectAllEnabled: boolean = true;
   @Output() selectedCardsChange = new EventEmitter<Card[]>();
   @HostBinding('class.p-border') borderApplied = true;
 

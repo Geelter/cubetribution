@@ -33,6 +33,7 @@
                  [cardList]="selectedCardPool == 'results' ? cards : selectedCards"
                  [(selectedCards)]="selectedCards"
                  [selectedLayout]="selectedLayout"
+                 [selectAllEnabled]="selectedCardPool!='results'"
   ></app-card-list>
 
   <app-add-dialog [(dialogVisible)]="dialogVisible" [cardSelection]="selectedCards"></app-add-dialog>
