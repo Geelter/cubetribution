@@ -7,11 +7,12 @@ import {ThemeToggleComponent} from "./components/theme-toggle/theme-toggle.compo
 import {ToastModule} from "primeng/toast";
 import {SupabaseAuthService} from "./services/supabase/supabase-auth.service";
 import {CollectionsService} from "./services/collections.service";
+import {ScrollTopModule} from "primeng/scrolltop";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MenubarModule, ThemeToggleComponent, ToastModule],
+  imports: [CommonModule, RouterOutlet, MenubarModule, ThemeToggleComponent, ToastModule, ScrollTopModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
