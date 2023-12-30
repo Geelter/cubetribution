@@ -19,19 +19,24 @@ export class ScryfallService {
   fetchInProgress$ = this.fetchInProgress.asObservable();
 
   getCardsForAutocomplete(param: string): Observable<Card[]> {
+    this.fetchInProgress.next(true);
+
     const autocompleteURL = `${this.BASE_API_URL}/autocomplete?q=${param}`;
 
     return this.http.get<ScryfallAutocompleteResponse>(
-        autocompleteURL,
-        { headers: {'Content-Type': 'application/json'}}
+      autocompleteURL,
+      { headers: {'Content-Type': 'application/json'}}
     ).pipe(
-        switchMap((value, _) =>
-            this.getCardsForIDs(value.data)
-        )
+      switchMap((value, _) => {
+        this.fetchInProgress.next(false);
+        return this.getCardsForIDs(value.data)
+      })
     );
   }
   getCardsForIDs(ids: string[]): Observable<Card[]> {
-    this.fetchInProgress.next(true);
+    if (ids.length) {
+      this.fetchInProgress.next(true);
+    }
 
     const idSlices = this.sliceIDArray(ids);
     const payloads = idSlices.map(
@@ -40,20 +45,16 @@ export class ScryfallService {
     const urls = this.createRequestsForPayloads(payloads);
 
     return forkJoin(urls).pipe(
-      tap(response => console.log(response)),
       switchMap(responses =>
         of(responses.flatMap(response => {
-            this.fetchInProgress.next(false);
-            return response.data.map(value => new Card(value))
-          }
-        ))
-      ),
-      catchError(
-        response => {
           this.fetchInProgress.next(false);
-          return throwError(() => new Error('Error fetching card collection'))
-        }
-      )
+          return response.data.map(value => new Card(value))
+        }))
+      ),
+      catchError(response => {
+        this.fetchInProgress.next(false);
+        return throwError(() => new Error('Error fetching card collection'))
+      })
     );
   }
 
