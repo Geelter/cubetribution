@@ -6,7 +6,10 @@
               [isSelected]="checkIfCardSelected(card)"
     ></app-card>
   } @placeholder {
-    <p-skeleton width="250px" height="405px" borderRadius="16px"></p-skeleton>
+      <p-skeleton width="100%"
+                  height="20rem"
+                  borderRadius="16px"
+      ></p-skeleton>
   }
 } @empty {
   <p>List is empty</p>
