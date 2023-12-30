@@ -21,13 +21,16 @@
   </ng-template>
 </p-table>
 
-<app-card-table [cardList]="cardList"
-                [selectedCards]="selectedCards"
-                [attr.data-compact]="selectedLayout == 'grid'"
-                (selectedCardsChange)="handleSelectionChange($event)"
-></app-card-table>
 <app-card-grid [cardList]="cardList"
                [selectedCards]="selectedCards"
                [ngClass]="{'layout--disabled': selectedLayout != 'grid'}"
                (selectedCardsChange)="handleSelectionChange($event)"
 ></app-card-grid>
+
+@defer (on immediate) {
+  <app-card-table [cardList]="cardList"
+                  [selectedCards]="selectedCards"
+                  [ngClass]="{'layout--disabled': selectedLayout != 'table'}"
+                  (selectedCardsChange)="handleSelectionChange($event)"
+  ></app-card-table>
+}
