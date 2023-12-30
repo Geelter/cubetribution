@@ -1,7 +1,4 @@
-<p-table #cardTable
-         [value]="cardList"
-         (sortFunction)="customCardSort($event)"
-         [customSort]="true"
+<p-table [value]="cardList"
          styleClass="p-datatable-striped"
          [tableStyle]="{ 'width': '100%' }"
          [(selection)]="selectedCards"
@@ -10,18 +7,6 @@
          (onRowUnselect)="emitSelectedCards()"
          dataKey="id"
 >
-  <ng-template pTemplate="header">
-    <tr>
-      <th style="width: 4rem">
-        <p-tableHeaderCheckbox (click)="emitSelectedCards()"></p-tableHeaderCheckbox>
-      </th>
-      <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-      <th pSortableColumn="rarity">Rarity <p-sortIcon field="rarity"></p-sortIcon></th>
-      <th pSortableColumn="mana_cost">Mana Cost <p-sortIcon field="mana_cost"></p-sortIcon></th>
-      <th pSortableColumn="cmc">CMC <p-sortIcon field="cmc"></p-sortIcon></th>
-      <th></th>
-    </tr>
-  </ng-template>
   <ng-template pTemplate="body" let-card>
     <tr>
       <td>
