@@ -25,7 +25,7 @@ export class CubeGridComponent implements OnInit {
 
   selectCube(cube: Cube) {
     this.cubesService.selectCube(cube);
-    this.router.navigate(['cube-detail']);
+    this.router.navigate(['/cube', 'detail']);
   }
 
   ngOnInit() {
