@@ -2,7 +2,6 @@ import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Collection} from "../../../models/collection";
 import {CollectionsService} from "../../../services/collections.service";
-import {ScryfallService} from "../../../services/scryfall.service";
 import {ButtonModule} from "primeng/button";
 import {CardListComponent} from "../../cards/card-list/card-list.component";
 import {SelectButtonModule} from "primeng/selectbutton";
@@ -10,30 +9,33 @@ import {ConfirmationService, SharedModule} from "primeng/api";
 import {ToolbarModule} from "primeng/toolbar";
 import {Card} from "../../../models/card";
 import {FormsModule} from "@angular/forms";
-import {take, tap} from "rxjs";
+import {combineLatestWith, map, Observable, switchMap} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {dialogBreakpoints} from "../../../app.config";
 import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
+import {DonateDialogComponent} from "../../donate-dialog/donate-dialog.component";
+import {CardsService} from "../../../services/cards.service";
 
 @Component({
   selector: 'app-collection',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CardListComponent, SelectButtonModule, SharedModule, ToolbarModule, FormsModule, DialogModule, ConfirmDialogModule, LoadingSpinnerComponent],
+  imports: [CommonModule, ButtonModule, CardListComponent, SelectButtonModule, SharedModule, ToolbarModule, FormsModule, DialogModule, ConfirmDialogModule, LoadingSpinnerComponent, DonateDialogComponent],
   templateUrl: './collection.component.html',
   styleUrl: './collection.component.scss'
 })
 export class CollectionComponent {
   protected readonly dialogBreakpoints = dialogBreakpoints;
   collectionsService = inject(CollectionsService);
-  scryfallService = inject(ScryfallService);
   confirmationService = inject(ConfirmationService);
+  cardsService = inject(CardsService);
 
-  collection: Collection | null = null;
-  collectionCards: Card[] = [];
+  collection$: Observable<Collection | null>;
+  collectionCards$: Observable<Card[]>;
+  vm$: Observable<{collection: Collection | null, collectionCards: Card[]}>;
   requestInProgress$ = this.collectionsService.requestInProgress$;
 
+  dialogVisible: boolean = false;
   selectedCards: Card[] = [];
 
   selectedLayout: string = 'grid';
@@ -41,6 +43,10 @@ export class CollectionComponent {
     { icon: 'pi pi-th-large', layout: 'grid' },
     { icon: 'pi pi-bars', layout: 'table' }
   ];
+
+  showDialog() {
+    this.dialogVisible = true;
+  }
 
   confirmDelete(collection: Collection) {
     this.confirmationService.confirm({
@@ -61,17 +67,16 @@ export class CollectionComponent {
   }
 
   constructor() {
-    this.collectionsService.selectedCollection$.pipe(
-      takeUntilDestroyed(),
-      tap(collection => {
-        this.scryfallService.getCardsForIDs(collection?.cardIDs ?? []).pipe(
-          take(1),
-          tap(cards => this.collectionCards = cards)
-        ).subscribe();
-
-        this.collection = collection;
-        }
+    this.collection$ = this.collectionsService.selectedCollection$;
+    this.collectionCards$ = this.collectionsService.selectedCollection$.pipe(
+      switchMap(collection =>
+        this.cardsService.getCardsForIDs(collection?.cardIDs ?? [])
       )
-    ).subscribe();
+    );
+
+    this.vm$ = this.collection$.pipe(
+      combineLatestWith(this.collectionCards$),
+      map(([collection, collectionCards]) => ({ collection, collectionCards}))
+    );
   }
 }
