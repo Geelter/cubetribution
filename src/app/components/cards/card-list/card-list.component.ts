@@ -10,7 +10,7 @@ import {TableModule} from "primeng/table";
 @Component({
   selector: 'app-card-list',
   standalone: true,
-  imports: [CommonModule, CardGridComponent, CardTableComponent],
+  imports: [CommonModule, CardGridComponent, CardTableComponent, ButtonModule, SharedModule, TableModule],
   templateUrl: './card-list.component.html',
   styleUrl: './card-list.component.scss'
 })
