@@ -2,11 +2,12 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardComponent} from "../card/card.component";
 import {Card} from "../../../models/card";
+import {SkeletonModule} from "primeng/skeleton";
 
 @Component({
   selector: 'app-card-grid',
   standalone: true,
-    imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardComponent, SkeletonModule],
   templateUrl: './card-grid.component.html',
   styleUrl: './card-grid.component.scss'
 })

@@ -1,9 +1,13 @@
 @for (card of cardList; track card.id) {
-  <app-card [card]="card"
-            style="width: 100%; aspect-ratio: 5/7"
-            (cardSelected)="handleCardClick(card)"
-            [isSelected]="checkIfCardSelected(card)"
-  ></app-card>
+  @defer (on viewport) {
+    <app-card [card]="card"
+              style="width: 100%; aspect-ratio: 5/7"
+              (cardSelected)="handleCardClick(card)"
+              [isSelected]="checkIfCardSelected(card)"
+    ></app-card>
+  } @placeholder {
+    <p-skeleton width="250px" height="405px" borderRadius="16px"></p-skeleton>
+  }
 } @empty {
   <p>List is empty</p>
 }
