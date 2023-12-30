@@ -1,43 +1,50 @@
-@if (collection) {
-  <p-toolbar styleClass="mb-4 gap-2">
-    <ng-template pTemplate="start">
-      <p-button label="Donate"
-                icon="pi pi-gift"
-                [disabled]="!collectionCards.length"
-      ></p-button>
-    </ng-template>
+@if (vm$ | async; as vm) {
+  @if (vm.collection) {
+    <p-toolbar styleClass="mb-4 gap-2">
+      <ng-template pTemplate="start">
+        <p-button label="Donate"
+                  icon="pi pi-gift"
+                  [disabled]="!vm.collectionCards.length"
+                  (onClick)="showDialog()"
+        ></p-button>
+      </ng-template>
 
-    <ng-template pTemplate="center">
-      <p-selectButton [options]="layoutOptions"
-                      [(ngModel)]="selectedLayout"
-                      optionLabel="icon"
-                      optionValue="layout"
-      >
-        <ng-template let-option pTemplate>
-          <i [class]="option.icon"></i>
-        </ng-template>
-      </p-selectButton>
-    </ng-template>
+      <ng-template pTemplate="center">
+        <p-selectButton [options]="layoutOptions"
+                        [(ngModel)]="selectedLayout"
+                        optionLabel="icon"
+                        optionValue="layout"
+        >
+          <ng-template let-option pTemplate>
+            <i [class]="option.icon"></i>
+          </ng-template>
+        </p-selectButton>
+      </ng-template>
 
-    <ng-template pTemplate="end">
-      <p-button label="Delete"
-                icon="pi pi-trash"
-                (onClick)="confirmDelete(collection)"
-                [disabled]="!selectedCards.length"
-      ></p-button>
-    </ng-template>
-  </p-toolbar>
+      <ng-template pTemplate="end">
+        <p-button label="Delete"
+                  icon="pi pi-trash"
+                  (onClick)="confirmDelete(vm.collection)"
+                  [disabled]="!selectedCards.length"
+        ></p-button>
+      </ng-template>
+    </p-toolbar>
 
-  <app-card-list class="p-border"
-                 [cardList]="collectionCards"
-                 [(selectedCards)]="selectedCards"
-                 [selectedLayout]="selectedLayout"
-  ></app-card-list>
-  <p-confirmDialog [breakpoints]="dialogBreakpoints"
-                   [style]="{ width: '40rem' }"
-  ></p-confirmDialog>
+    <app-card-list class="p-border"
+                   [cardList]="vm.collectionCards"
+                   [(selectedCards)]="selectedCards"
+                   [selectedLayout]="selectedLayout"
+    ></app-card-list>
+    <p-confirmDialog [breakpoints]="dialogBreakpoints"
+                     [style]="{ width: '40rem' }"
+    ></p-confirmDialog>
+
+    <app-donate-dialog [(dialogVisible)]="dialogVisible"
+                       [collection]="vm.collection"
+    ></app-donate-dialog>
+  }
 } @else {
-  No collection selected
+  <app-loading-spinner></app-loading-spinner>
 }
 
 @if (requestInProgress$ | async) {
