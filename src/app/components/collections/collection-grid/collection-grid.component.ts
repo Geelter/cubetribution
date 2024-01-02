@@ -27,8 +27,8 @@ export class CollectionGridComponent {
   private readonly router = inject(Router);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly collectionsService = inject(CollectionsService);
-  collectionList$ = this.collectionsService.collections$;
-  fetchInProgress$ = this.collectionsService.requestInProgress$;
+  readonly collectionList$ = this.collectionsService.collections$;
+  readonly fetchInProgress$ = this.collectionsService.requestInProgress$;
 
   collectionForm: FormGroup;
   dialogVisible: boolean = false;

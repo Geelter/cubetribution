@@ -10,7 +10,7 @@ import {Card} from "../../../models/card";
 import {combineLatestWith, map, Observable, switchMap} from "rxjs";
 import {FormsModule} from "@angular/forms";
 import {DialogModule} from "primeng/dialog";
-import {dialogBreakpoints} from "../../../app.config";
+import {layoutOptions} from "../../../app.config";
 import {AddDialogComponent} from "../../add-dialog/add-dialog.component";
 import {CardsService} from "../../../services/cards.service";
 import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
@@ -23,12 +23,12 @@ import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.com
   styleUrl: './cube.component.scss'
 })
 export class CubeComponent {
-  protected readonly dialogBreakpoints = dialogBreakpoints;
-  readonly cubesService = inject(CubesService);
-  readonly cardsService = inject(CardsService);
+  protected readonly layoutOptions = layoutOptions;
+  private readonly cubesService = inject(CubesService);
+  private readonly cardsService = inject(CardsService);
 
-  cube$: Observable<Cube | null>;
-  cubeCards$: Observable<Card[]>;
+  private readonly cube$: Observable<Cube | null>;
+  private readonly cubeCards$: Observable<Card[]>;
   vm$: Observable<{cube: Cube | null; cubeCards: Card[]}>;
   requestInProgress$ = this.cubesService.requestInProgress$;
 
@@ -36,10 +36,6 @@ export class CubeComponent {
   dialogVisible: boolean = false;
 
   selectedLayout: string = 'grid';
-  layoutOptions = [
-    { icon: 'pi pi-th-large', layout: 'grid' },
-    { icon: 'pi pi-bars', layout: 'table' }
-  ];
 
   showDialog() {
     this.dialogVisible = true;

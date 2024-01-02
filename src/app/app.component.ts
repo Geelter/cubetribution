@@ -17,9 +17,9 @@ import {ScrollTopModule} from "primeng/scrolltop";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  primengConfig = inject(PrimeNGConfig);
-  authService = inject(SupabaseAuthService);
-  collectionsService = inject(CollectionsService);
+  private primengConfig = inject(PrimeNGConfig);
+  private readonly authService = inject(SupabaseAuthService);
+  private readonly collectionsService = inject(CollectionsService);
 
   title = 'cubetribution';
 

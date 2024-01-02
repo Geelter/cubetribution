@@ -22,3 +22,8 @@ export const dialogBreakpoints = {
   '700px': '80vw',
   '600px': '95vw'
 };
+
+export const layoutOptions = [
+  { icon: 'pi pi-th-large', layout: 'grid' },
+  { icon: 'pi pi-bars', layout: 'table' }
+];

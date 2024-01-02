@@ -12,7 +12,7 @@ import {FormsModule} from "@angular/forms";
 import {combineLatestWith, map, Observable, switchMap} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
-import {dialogBreakpoints} from "../../../app.config";
+import {dialogBreakpoints, layoutOptions} from "../../../app.config";
 import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
 import {DonateDialogComponent} from "../../donate-dialog/donate-dialog.component";
 import {CardsService} from "../../../services/cards.service";
@@ -26,12 +26,13 @@ import {CardsService} from "../../../services/cards.service";
 })
 export class CollectionComponent {
   protected readonly dialogBreakpoints = dialogBreakpoints;
-  collectionsService = inject(CollectionsService);
-  confirmationService = inject(ConfirmationService);
-  cardsService = inject(CardsService);
+  protected readonly layoutOptions = layoutOptions;
+  private readonly collectionsService = inject(CollectionsService);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly cardsService = inject(CardsService);
 
-  collection$: Observable<Collection | null>;
-  collectionCards$: Observable<Card[]>;
+  private readonly collection$: Observable<Collection | null>;
+  private readonly collectionCards$: Observable<Card[]>;
   vm$: Observable<{collection: Collection | null, collectionCards: Card[]}>;
   requestInProgress$ = this.collectionsService.requestInProgress$;
 
@@ -39,10 +40,6 @@ export class CollectionComponent {
   selectedCards: Card[] = [];
 
   selectedLayout: string = 'grid';
-  layoutOptions = [
-    { icon: 'pi pi-th-large', layout: 'grid' },
-    { icon: 'pi pi-bars', layout: 'table' }
-  ];
 
   showDialog() {
     this.dialogVisible = true;

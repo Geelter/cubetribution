@@ -16,6 +16,7 @@ import {DialogModule} from "primeng/dialog";
 import {ListboxModule} from "primeng/listbox";
 import {AddDialogComponent} from "../add-dialog/add-dialog.component";
 import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.component";
+import {layoutOptions} from "../../app.config";
 
 @Component({
   selector: 'app-browser',
@@ -25,7 +26,8 @@ import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.compon
   styleUrls: ['./browser.component.scss']
 })
 export class BrowserComponent {
-  private scryfall = inject(ScryfallService);
+  protected readonly layoutOptions = layoutOptions;
+  private readonly scryfall = inject(ScryfallService);
 
   private inputValue = new BehaviorSubject<string | undefined>(undefined);
   private inputValue$ = this.inputValue.asObservable()
@@ -46,10 +48,6 @@ export class BrowserComponent {
   dialogVisible: boolean = false;
 
   selectedLayout: string = 'grid';
-  layoutOptions = [
-    { icon: 'pi pi-th-large', layout: 'grid' },
-    { icon: 'pi pi-bars', layout: 'table' }
-  ];
 
   selectedCardPool: string = 'results';
   cardPoolOptions = [
