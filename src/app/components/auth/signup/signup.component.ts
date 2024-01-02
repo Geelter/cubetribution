@@ -16,10 +16,10 @@ import {RouterLink} from "@angular/router";
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
-  formBuilder = inject(FormBuilder);
-  authService = inject(SupabaseAuthService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(SupabaseAuthService);
 
-  signUpForm: FormGroup;
+  readonly signUpForm: FormGroup;
 
   isSubmitting: boolean = false;
 

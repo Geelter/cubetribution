@@ -16,10 +16,10 @@ import {RouterLink} from "@angular/router";
   styleUrl: './signin.component.scss'
 })
 export class SigninComponent {
-  formBuilder = inject(FormBuilder);
-  authService = inject(SupabaseAuthService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(SupabaseAuthService);
 
-  signInForm: FormGroup;
+  readonly signInForm: FormGroup;
 
   isSubmitting: boolean = false;
 

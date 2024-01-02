@@ -20,8 +20,8 @@ export class DonateDialogComponent {
   @Input({ required: true }) dialogVisible!: boolean;
   @Input({ required: true }) collection!: Collection;
   @Output() dialogVisibleChange = new EventEmitter<boolean>();
-  readonly cubesService = inject(CubesService);
-  readonly donationsService = inject(DonationsService);
+  private readonly cubesService = inject(CubesService);
+  private readonly donationsService = inject(DonationsService);
 
   cubes$ = this.cubesService.cubes$;
   selectedCube: Cube | null = null;

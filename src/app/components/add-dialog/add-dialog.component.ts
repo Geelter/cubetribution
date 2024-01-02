@@ -24,8 +24,8 @@ export class AddDialogComponent {
   @Input({ required: true }) dialogVisible!: boolean;
   @Input({ required: true }) cardSelection!: Card[];
   @Output() dialogVisibleChange = new EventEmitter<boolean>();
-  formBuilder = inject(FormBuilder);
-  collectionsService = inject(CollectionsService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly collectionsService = inject(CollectionsService);
 
   collectionForm: FormGroup;
   collections$ = this.collectionsService.collections$;
