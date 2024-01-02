@@ -1,0 +1,11 @@
+<div class="donation-container" (click)="handleDonationClick()">
+  <div class="thumbnail">
+    <img [ngSrc]="donation.thumbnailURI" alt="Donation thumbnail" fill="contain">
+  </div>
+  <p class="label">{{donation.name}}</p>
+</div>
+@if (deleteMode) {
+  <div class="delete-overlay">
+    <p-button icon="pi pi-trash" severity="danger" (onClick)="handleDeleteClick()"></p-button>
+  </div>
+}
