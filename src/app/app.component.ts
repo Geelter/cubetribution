@@ -41,6 +41,10 @@ export class AppComponent implements OnInit {
       routerLink: '/collection/list'
     },
     {
+      label: 'Donations',
+      routerLink: '/donation/list'
+    },
+    {
       label: 'Sign Out',
       icon: 'pi pi-power-off',
       command: () => {
