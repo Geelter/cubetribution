@@ -107,7 +107,7 @@ export class CollectionsService {
   }
 
   private async updateCollectionInState(collection: Collection, cardIDs: string[]) {
-    const collections = new Map<number, Collection>(this.collections.getValue() ?? []);
+    const collections = this.collections.getValue() ?? new Map<number, Collection>();
 
     const error = await this.databaseService.updateCollectionCards(collection.id, cardIDs);
 
