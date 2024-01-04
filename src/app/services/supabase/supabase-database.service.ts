@@ -82,7 +82,7 @@ export class SupabaseDatabaseService {
       this.messageService.add({
         key: 'global',
         severity: 'error',
-        summary: 'Deleting collection-card failed',
+        summary: 'Deleting collection failed',
         detail: error.message
       });
     } else {
@@ -231,7 +231,9 @@ export class SupabaseDatabaseService {
       .select()
       .returns<Tables<'donations'>[]>();
 
-    const donations = data?.map(donation => new Donation(donation));
+    const donations = data
+      ? new Map(data.map(donation => [donation.id, new Donation(donation)]))
+      : undefined;
 
     if (error) {
       this.messageService.add({
@@ -249,5 +251,29 @@ export class SupabaseDatabaseService {
     }
 
     return donations;
+  }
+
+  async updateDonationCards(id: number, updatedIDs: string[]) {
+    const { error } = await this.supabase.client
+      .from('donations')
+      .update({ card_ids: updatedIDs })
+      .eq('id', id);
+
+    if (error) {
+      this.messageService.add({
+        key: 'global',
+        severity: 'error',
+        summary: 'Updating donation failed',
+        detail: error.message
+      });
+    } else {
+      this.messageService.add({
+        key: 'global',
+        severity: 'success',
+        summary: 'Donation updated'
+      })
+    }
+
+    return error;
   }
 }
