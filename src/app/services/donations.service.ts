@@ -1,9 +1,10 @@
 import {inject, Injectable} from '@angular/core';
 import {SupabaseDatabaseService} from "./supabase/supabase-database.service";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, map} from "rxjs";
 import {Donation} from "../models/donation";
 import {Collection} from "../models/collection";
 import {Cube} from "../models/cube";
+import {Card} from "../models/card";
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,16 @@ import {Cube} from "../models/cube";
 export class DonationsService {
   private readonly databaseService = inject(SupabaseDatabaseService);
 
-  private donations = new BehaviorSubject<Donation[] | null>(null);
-  donations$ = this.donations.asObservable();
+  private donations = new BehaviorSubject<Map<number, Donation> | null>(null);
+  donations$ = this.donations.asObservable()
+    .pipe(
+      map(donationMap => {
+        return donationMap
+          ? Array.from(donationMap.values())
+          : null
+      })
+    );
+
   private selectedDonation = new BehaviorSubject<Donation | null>(null);
   selectedDonation$ = this.selectedDonation.asObservable();
 
@@ -22,7 +31,7 @@ export class DonationsService {
   async initializeDonations() {
     const donationsValue = this.donations.getValue();
 
-    if (!donationsValue || !donationsValue.length) {
+    if (!donationsValue || !donationsValue.size) {
       await this.getDonations();
     }
   }
@@ -39,10 +48,6 @@ export class DonationsService {
     }
   }
 
-  selectDonation(donation: Donation) {
-    this.selectedDonation.next(donation);
-  }
-
   clearFetchedDonations() {
     this.donations.next(null);
   }
@@ -53,10 +58,21 @@ export class DonationsService {
     const createdDonation = await this.databaseService.createDonationForCube(collection, cube);
 
     if (createdDonation) {
-      const currentDonations = this.donations.getValue() ?? [];
+      const currentDonations = this.donations.getValue() ?? new Map<number, Donation>();
 
-      this.donations.next([...currentDonations, createdDonation]);
+      this.donations.next(currentDonations.set(createdDonation.id, createdDonation));
     }
+
+    this.requestInProgress.next(false);
+  }
+
+  async removeCardsFromDonation(donation: Donation, cards: Card[]) {
+    this.requestInProgress.next(true);
+
+    const idsToRemove = cards.map(card => card.id);
+    const filteredIDs = donation.cardIDs.filter(id => !idsToRemove.includes(id));
+
+    await this.updateDonationInState(donation, filteredIDs);
 
     this.requestInProgress.next(false);
   }
@@ -67,13 +83,43 @@ export class DonationsService {
     const error = await this.databaseService.deleteDonation(donation);
 
     if (!error) {
-      const filteredDonations = this.donations.getValue()?.filter(
-        val => val.id != donation.id
-      ) ?? [];
+      const donations = this.donations.getValue() ?? new Map<number, Donation>();
 
-      this.donations.next([...filteredDonations]);
+      donations.delete(donation.id);
+
+      this.donations.next(donations);
     }
 
     this.requestInProgress.next(false);
+  }
+
+  private async updateDonationInState(donation: Donation, cardIDs: string[]) {
+    const donations = this.donations.getValue() ?? new Map<number, Donation>();
+
+    const error = await this.databaseService.updateDonationCards(donation.id, cardIDs);
+
+    if (!error) {
+      donation.cardIDs = cardIDs;
+      donations.set(donation.id, donation);
+
+      this.donations.next(donations);
+      this.emitSelectedDonationIfMatches(donation);
+    }
+  }
+
+  private emitSelectedDonationIfMatches(donation: Donation) {
+    const selectedDonation = this.selectedDonation.getValue();
+
+    if (selectedDonation && selectedDonation.id === donation.id) {
+      this.selectedDonation.next(donation);
+    }
+  }
+
+  selectDonation(donation: Donation) {
+    this.selectedDonation.next(donation);
+  }
+
+  clearSelectedDonation() {
+    this.selectedDonation.next(null);
   }
 }
