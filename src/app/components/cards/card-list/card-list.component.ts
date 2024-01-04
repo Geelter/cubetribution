@@ -133,7 +133,6 @@ export class CardListComponent {
   }
 
   onSelectionChange(event: any) {
-    console.log(this.selectedCards);
     this.emitSelectedCards();
   }
 }
