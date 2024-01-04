@@ -32,6 +32,7 @@ export class DonationComponent {
   private readonly donation$: Observable<Donation | null>;
   private readonly donationCards$: Observable<Card[]>;
   vm$: Observable<{donation: Donation | null, donationCards: Card[]}>;
+  requestInProgress$ = this.donationsService.requestInProgress$;
 
   selectedCards: Card[] = [];
 

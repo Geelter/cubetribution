@@ -34,3 +34,7 @@
 } @else {
   <app-loading-spinner></app-loading-spinner>
 }
+
+@if (requestInProgress$ | async) {
+  <app-loading-spinner></app-loading-spinner>
+}
