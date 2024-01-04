@@ -1,1 +1,14 @@
-<p>card-collection works!</p>
+<p-toolbar styleClass="mb-4 gap-2">
+  <ng-template pTemplate="start">
+    <ng-content select="toolbar-start"></ng-content>
+  </ng-template>
+
+  <ng-template pTemplate="center">
+    <ng-content select="toolbar-center"></ng-content>
+  </ng-template>
+
+  <ng-template pTemplate="end">
+    <ng-content select="toolbar-end"></ng-content>
+  </ng-template>
+</p-toolbar>
+<ng-content></ng-content>
