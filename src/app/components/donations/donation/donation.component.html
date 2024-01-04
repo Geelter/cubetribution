@@ -1,1 +1,25 @@
-<p>donation works!</p>
+@if (vm$ | async; as vm) {
+  @if (vm.donation) {
+    <p-toolbar styleClass="mb-4 gap-2">
+      <ng-template pTemplate="center">
+        <p-selectButton [options]="layoutOptions"
+                        [(ngModel)]="selectedLayout"
+                        optionLabel="icon"
+                        optionValue="layout"
+        >
+          <ng-template let-option pTemplate>
+            <i [class]="option.icon"></i>
+          </ng-template>
+        </p-selectButton>
+      </ng-template>
+
+      <ng-template pTemplate="end">
+        <p-button label="Delete"
+                  icon="pi pi-trash"
+                  (onClick)="confirmDelete(vm.donation)"
+                  [disabled]="!selectedCards.length"
+        ></p-button>
+      </ng-template>
+    </p-toolbar>
+  }
+}
