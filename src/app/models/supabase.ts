@@ -23,7 +23,7 @@ export interface Database {
           created_at?: string
           id?: number
           name: string
-          thumbnail: string
+          thumbnail?: string
           user_id?: string
         }
         Update: {
@@ -57,7 +57,7 @@ export interface Database {
           created_at?: string
           id?: number
           name: string
-          thumbnail: string
+          thumbnail?: string
         }
         Update: {
           card_ids?: string[]
@@ -87,7 +87,7 @@ export interface Database {
           id?: number
           name: string
           thumbnail?: string
-          user_id: string
+          user_id?: string
         }
         Update: {
           accepted?: boolean
