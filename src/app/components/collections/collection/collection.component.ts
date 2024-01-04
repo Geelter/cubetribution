@@ -57,9 +57,7 @@ export class CollectionComponent {
   }
 
   deleteSelectedCards(collection: Collection) {
-    this.collectionsService.removeCardsFromCollection(collection, this.selectedCards).then(() => {
-        this.selectedCards = [];
-      }
+    this.collectionsService.removeCardsFromCollection(collection, this.selectedCards).then(() => this.selectedCards = []
     );
   }
 
