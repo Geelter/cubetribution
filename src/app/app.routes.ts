@@ -3,6 +3,7 @@ import {collectionDetailGuard} from "./guards/collection-detail.guard";
 import {authenticatedGuard} from "./guards/authenticated.guard";
 import {cubeDetailGuard} from "./guards/cube-detail.guard";
 import {unauthenticatedGuard} from "./guards/unauthenticated.guard";
+import {donationDetailGuard} from "./guards/donation-detail.guard";
 
 export const routes: Routes = [
   {
@@ -82,6 +83,29 @@ export const routes: Routes = [
         canActivate: [cubeDetailGuard],
         loadComponent: () => import('./components/cubes/cube/cube.component').then(
           m => m.CubeComponent
+        )
+      }
+    ]
+  },
+  {
+    path: 'donation',
+    children: [
+      {
+        path: '',
+        redirectTo: 'list',
+        pathMatch: 'full'
+      },
+      {
+        path: 'list',
+        loadComponent: () => import('./components/donations/donation-grid/donation-grid.component').then(
+          m => m.DonationGridComponent
+        )
+      },
+      {
+        path: 'detail',
+        canActivate: [donationDetailGuard],
+        loadComponent: () => import('./components/donations/donation/donation.component').then(
+          m => m.DonationComponent
         )
       }
     ]
