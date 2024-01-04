@@ -7,19 +7,23 @@ import {Donation} from "../../../models/donation";
 import {Card} from "../../../models/card";
 import {ToolbarModule} from "primeng/toolbar";
 import {ConfirmationService, SharedModule} from "primeng/api";
-import {layoutOptions} from "../../../app.config";
+import {dialogBreakpoints, layoutOptions} from "../../../app.config";
 import {SelectButtonModule} from "primeng/selectbutton";
 import {ButtonModule} from "primeng/button";
 import {FormsModule} from "@angular/forms";
+import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
+import {CardListComponent} from "../../cards/card-list/card-list.component";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
 
 @Component({
   selector: 'app-donation',
   standalone: true,
-  imports: [CommonModule, ToolbarModule, SharedModule, SelectButtonModule, ButtonModule, FormsModule],
+  imports: [CommonModule, ToolbarModule, SharedModule, SelectButtonModule, ButtonModule, FormsModule, LoadingSpinnerComponent, CardListComponent, ConfirmDialogModule],
   templateUrl: './donation.component.html',
   styleUrl: './donation.component.scss'
 })
 export class DonationComponent {
+  protected readonly dialogBreakpoints = dialogBreakpoints;
   protected readonly layoutOptions = layoutOptions;
   private readonly donationsService = inject(DonationsService);
   private readonly confirmationService = inject(ConfirmationService);
