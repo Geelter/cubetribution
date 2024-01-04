@@ -1,1 +1,19 @@
-<p>donation-grid works!</p>
+<p-toolbar styleClass="mb-4 gap-2">
+  <ng-template pTemplate="start">
+    <p-button label="Refresh" icon="pi pi-refresh" (onClick)="refreshDonations()"></p-button>
+  </ng-template>
+  <ng-template pTemplate="center">
+    <p-selectButton [options]="donationStatusOptions" [(ngModel)]="selectedDonationStatus" optionLabel="label" optionValue="status">
+      <ng-template let-option pTemplate>
+        {{ option.label }}
+      </ng-template>
+    </p-selectButton>
+  </ng-template>
+  <ng-template pTemplate="end">
+    <p-button [label]="deleteMode ? 'Exit delete mode' : 'Delete mode'"
+              icon="pi pi-trash"
+              (onClick)="toggleDeleteMode()"
+              [disabled]="selectedDonationStatus != 'pending'"
+    ></p-button>
+  </ng-template>
+</p-toolbar>
