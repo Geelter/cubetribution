@@ -1,18 +1,18 @@
 import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardGridComponent} from "../card-grid/card-grid.component";
-import {CardTableComponent} from "../card-table/card-table.component";
 import {Card} from "../../../models/card";
 import {ButtonModule} from "primeng/button";
 import {SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {CardComponent} from "../card/card.component";
 import {SkeletonModule} from "primeng/skeleton";
+import {ManaCostComponent} from "../mana-cost/mana-cost.component";
 
 @Component({
   selector: 'app-card-list',
   standalone: true,
-  imports: [CommonModule, CardGridComponent, CardTableComponent, ButtonModule, SharedModule, TableModule, CardComponent, SkeletonModule],
+  imports: [CommonModule, CardGridComponent, ButtonModule, SharedModule, TableModule, CardComponent, SkeletonModule, ManaCostComponent],
   templateUrl: './card-list.component.html',
   styleUrl: './card-list.component.scss'
 })
@@ -120,5 +120,9 @@ export class CardListComponent {
 
   checkIfCardSelected(card: Card): boolean {
     return this.selectedCards.some(value => value.id == card.id);
+  }
+
+  redirectToScryfall(link: string) {
+    window.open(link);
   }
 }

@@ -21,12 +21,7 @@
   </ng-template>
 </p-table>
 
-<!--<app-card-grid [cardList]="cardList"-->
-<!--               [selectedCards]="selectedCards"-->
-<!--               [ngClass]="{'layout&#45;&#45;disabled': selectedLayout != 'grid'}"-->
-<!--               (selectedCardsChange)="handleSelectionChange($event)"-->
-<!--&gt;</app-card-grid>-->
-<app-card-grid>
+<app-card-grid [ngClass]="{'layout--disabled': selectedLayout != 'grid'}">
   @for (card of cardList; track card.id) {
     @defer (on viewport) {
       <app-card [card]="card"
@@ -46,9 +41,31 @@
 </app-card-grid>
 
 @defer (on immediate) {
-  <app-card-table [cardList]="cardList"
-                  [selectedCards]="selectedCards"
-                  [ngClass]="{'layout--disabled': selectedLayout != 'table'}"
-                  (selectedCardsChange)="handleSelectionChange($event)"
-  ></app-card-table>
+  <p-table [value]="cardList"
+           styleClass="p-datatable-striped"
+           [tableStyle]="{'width': '100%'}"
+           [(selection)]="selectedCards"
+           [rowHover]="true"
+           dataKey="id"
+           [ngClass]="{'layout--disabled': selectedLayout != 'table'}"
+  >
+    <ng-template pTemplate="body" let-card>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="card"></p-tableCheckbox>
+        </td>
+        <td>{{ card.name }}</td>
+        <td>{{ card.rarity }}</td>
+        <td><app-mana-cost [manaCost]="card.manaCost"></app-mana-cost></td>
+        <td>{{ card.cmc }}
+        <td>
+          <p-button icon="pi pi-info"
+                    severity="info"
+                    [rounded]="true"
+                    (onClick)="redirectToScryfall(card.scryfallURI)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 }
