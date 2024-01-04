@@ -2,7 +2,7 @@ import {Tables} from "./supabase";
 
 export class Collection {
   private readonly _id: number;
-  private _createdAt: string;
+  private readonly _createdAt: string;
   private _name: string;
   private _thumbnailURI: string;
   private _cardIDs: string[];
@@ -15,8 +15,16 @@ export class Collection {
     return this._name;
   }
 
+  set name(newName: string) {
+    this._name = newName;
+  }
+
   get thumbnailURI() {
     return this._thumbnailURI
+  }
+
+  set thumbnailURI(newURI: string) {
+    this._thumbnailURI = newURI;
   }
 
   get cardIDs() {
