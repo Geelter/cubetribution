@@ -3,7 +3,12 @@
     <p-button label="Refresh" icon="pi pi-refresh" (onClick)="refreshDonations()"></p-button>
   </ng-template>
   <ng-template pTemplate="center">
-    <p-selectButton [options]="donationStatusOptions" [(ngModel)]="selectedDonationStatus" optionLabel="label" optionValue="status">
+    <p-selectButton [options]="donationStatusOptions"
+                    [(ngModel)]="selectedDonationStatus"
+                    optionLabel="label"
+                    optionValue="status"
+                    (onOptionClick)="handleOptionClick($event)"
+    >
       <ng-template let-option pTemplate>
         {{ option.label }}
       </ng-template>

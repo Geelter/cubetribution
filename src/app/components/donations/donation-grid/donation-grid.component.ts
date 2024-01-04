@@ -35,6 +35,10 @@ export class DonationGridComponent {
     this.donationsService.getDonations();
   }
 
+  handleOptionClick(event: any) {
+    if (event.option.status == 'accepted') this.deleteMode = false;
+  }
+
   constructor() {
     this.donationsService.initializeDonations();
   }
