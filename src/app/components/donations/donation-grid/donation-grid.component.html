@@ -22,3 +22,15 @@
     ></p-button>
   </ng-template>
 </p-toolbar>
+
+@for (donation of (selectedDonationStatus == 'pending' ? pendingDonations$ : acceptedDonations$) | async; track donation.id) {
+  <app-donation-card [donation]="donation"
+                     (donationClicked)="selectDonation(donation)"
+                     (deleteClicked)="confirmDelete(donation)"
+                     [deleteMode]="deleteMode"
+  ></app-donation-card>
+}
+
+<p-confirmDialog [style]="{width: '40rem'}"
+                 [breakpoints]="dialogBreakpoints"
+></p-confirmDialog>

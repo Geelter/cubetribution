@@ -13,6 +13,8 @@ export class DonationsService {
 
   private donations = new BehaviorSubject<Donation[] | null>(null);
   donations$ = this.donations.asObservable();
+  private selectedDonation = new BehaviorSubject<Donation | null>(null);
+  selectedDonation$ = this.selectedDonation.asObservable();
 
   private requestInProgress = new BehaviorSubject<boolean>(false);
   requestInProgress$ = this.requestInProgress.asObservable();
@@ -37,7 +39,11 @@ export class DonationsService {
     }
   }
 
-  clearFetchedCollections() {
+  selectDonation(donation: Donation) {
+    this.selectedDonation.next(donation);
+  }
+
+  clearFetchedDonations() {
     this.donations.next(null);
   }
 
