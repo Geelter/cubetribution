@@ -5,7 +5,7 @@ export class Donation {
   private readonly _name: string;
   private readonly _cubeID: number;
   private readonly _thumbnailURI: string;
-  private readonly _cardIDs: string[];
+  private _cardIDs: string[];
   private readonly _accepted: boolean;
 
   get id() {
@@ -26,6 +26,10 @@ export class Donation {
 
   get cardIDs() {
     return this._cardIDs;
+  }
+
+  set cardIDs(ids: string[]) {
+    this._cardIDs = ids;
   }
 
   get accepted() {
