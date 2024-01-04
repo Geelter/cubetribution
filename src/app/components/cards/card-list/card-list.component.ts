@@ -116,6 +116,12 @@ export class CardListComponent {
     this.selectedCards = this.checkIfCardSelected(card)
       ? this.selectedCards.filter(value => value.id != card.id)
       : [...this.selectedCards, card];
+
+    this.emitSelectedCards();
+  }
+
+  emitSelectedCards() {
+    this.selectedCardsChange.emit(this.selectedCards);
   }
 
   checkIfCardSelected(card: Card): boolean {
@@ -124,5 +130,10 @@ export class CardListComponent {
 
   redirectToScryfall(link: string) {
     window.open(link);
+  }
+
+  onSelectionChange(event: any) {
+    console.log(this.selectedCards);
+    this.emitSelectedCards();
   }
 }

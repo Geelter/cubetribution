@@ -6,11 +6,14 @@
          [(selection)]="selectedCards"
          compareSelectionBy="deepEquals"
          dataKey="id"
+         (selectionChange)="onSelectionChange($event)"
 >
   <ng-template pTemplate="header">
     <tr>
       <th style="width: 4rem">
-        <p-tableHeaderCheckbox [disabled]="!selectAllEnabled"></p-tableHeaderCheckbox>
+        <p-tableHeaderCheckbox [disabled]="!selectAllEnabled"
+                               (selectionchange)="onSelectionChange($event)"
+        ></p-tableHeaderCheckbox>
       </th>
       <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
       <th pSortableColumn="rarity">Rarity <p-sortIcon field="rarity"></p-sortIcon></th>
@@ -48,6 +51,8 @@
            [rowHover]="true"
            dataKey="id"
            [ngClass]="{'layout--disabled': selectedLayout != 'table'}"
+           (onRowSelect)="emitSelectedCards()"
+           (onRowUnselect)="emitSelectedCards()"
   >
     <ng-template pTemplate="body" let-card>
       <tr>
