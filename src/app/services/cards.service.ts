@@ -19,7 +19,6 @@ export class CardsService {
       .pipe(
         tap(cards => {
           cards.forEach(card => this.fetchedCards.set(card.id, card));
-          console.log(this.fetchedCards)
         }),
         switchMap(_ => from(this.filterMap(cardIDs)))
       )
