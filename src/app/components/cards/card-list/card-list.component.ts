@@ -6,11 +6,13 @@ import {Card} from "../../../models/card";
 import {ButtonModule} from "primeng/button";
 import {SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
+import {CardComponent} from "../card/card.component";
+import {SkeletonModule} from "primeng/skeleton";
 
 @Component({
   selector: 'app-card-list',
   standalone: true,
-  imports: [CommonModule, CardGridComponent, CardTableComponent, ButtonModule, SharedModule, TableModule],
+  imports: [CommonModule, CardGridComponent, CardTableComponent, ButtonModule, SharedModule, TableModule, CardComponent, SkeletonModule],
   templateUrl: './card-list.component.html',
   styleUrl: './card-list.component.scss'
 })
@@ -108,5 +110,15 @@ export class CardListComponent {
     const matches = manaCost.match(regex);
 
     return matches?.map(match => match.substring(1, match.length - 1));
+  }
+
+  handleCardClick(card: Card) {
+    this.selectedCards = this.checkIfCardSelected(card)
+      ? this.selectedCards.filter(value => value.id != card.id)
+      : [...this.selectedCards, card];
+  }
+
+  checkIfCardSelected(card: Card): boolean {
+    return this.selectedCards.some(value => value.id == card.id);
   }
 }

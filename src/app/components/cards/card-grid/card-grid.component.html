@@ -1,16 +1,1 @@
-@for (card of cardList; track card.id) {
-  @defer (on viewport) {
-    <app-card [card]="card"
-              style="width: 100%; aspect-ratio: 5/7"
-              (cardSelected)="handleCardClick(card)"
-              [isSelected]="checkIfCardSelected(card)"
-    ></app-card>
-  } @placeholder {
-      <p-skeleton width="100%"
-                  height="20rem"
-                  borderRadius="16px"
-      ></p-skeleton>
-  }
-} @empty {
-  <p>List is empty</p>
-}
+<ng-content></ng-content>

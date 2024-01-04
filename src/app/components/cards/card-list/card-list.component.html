@@ -21,11 +21,29 @@
   </ng-template>
 </p-table>
 
-<app-card-grid [cardList]="cardList"
-               [selectedCards]="selectedCards"
-               [ngClass]="{'layout--disabled': selectedLayout != 'grid'}"
-               (selectedCardsChange)="handleSelectionChange($event)"
-></app-card-grid>
+<!--<app-card-grid [cardList]="cardList"-->
+<!--               [selectedCards]="selectedCards"-->
+<!--               [ngClass]="{'layout&#45;&#45;disabled': selectedLayout != 'grid'}"-->
+<!--               (selectedCardsChange)="handleSelectionChange($event)"-->
+<!--&gt;</app-card-grid>-->
+<app-card-grid>
+  @for (card of cardList; track card.id) {
+    @defer (on viewport) {
+      <app-card [card]="card"
+                style="width: 100%; aspect-ratio: 5/7"
+                (cardSelected)="handleCardClick(card)"
+                [isSelected]="checkIfCardSelected(card)"
+      ></app-card>
+    } @placeholder {
+      <p-skeleton width="100%"
+                  height="20rem"
+                  borderRadius="16px"
+      ></p-skeleton>
+    }
+  } @empty {
+    <p>Card list empty.</p>
+  }
+</app-card-grid>
 
 @defer (on immediate) {
   <app-card-table [cardList]="cardList"
