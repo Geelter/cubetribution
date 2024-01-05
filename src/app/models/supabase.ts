@@ -116,6 +116,45 @@ export interface Database {
           }
         ]
       }
+      drafts: {
+        Row: {
+          created_at: string
+          cube_name: string
+          date: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          cube_name: string
+          date: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          cube_name?: string
+          date?: string
+          id?: number
+        }
+        Relationships: []
+      }
+      players: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           id: string
@@ -138,6 +177,54 @@ export interface Database {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      scores: {
+        Row: {
+          created_at: string
+          draft_id: number
+          id: number
+          omw: number
+          placement: number
+          player_id: number
+          points: number
+          wld: string
+        }
+        Insert: {
+          created_at?: string
+          draft_id: number
+          id?: number
+          omw: number
+          placement: number
+          player_id: number
+          points: number
+          wld: string
+        }
+        Update: {
+          created_at?: string
+          draft_id?: number
+          id?: number
+          omw?: number
+          placement?: number
+          player_id?: number
+          points?: number
+          wld?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scores_draft_id_fkey"
+            columns: ["draft_id"]
+            isOneToOne: false
+            referencedRelation: "drafts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scores_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
             referencedColumns: ["id"]
           }
         ]
