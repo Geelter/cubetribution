@@ -1,6 +1,6 @@
 :host {
   display: grid;
-  grid-template-columns: [full-width-start] minmax(1rem, 1fr) [content-start] minmax(0, 80rem) [content-end] minmax(1rem, 1fr) [full-width-end];
+  grid-template-columns: [full-width-start] minmax(0.5rem, 1fr) [content-start] minmax(0, 80rem) [content-end] minmax(0.5rem, 1fr) [full-width-end];
   grid-template-rows: auto 1fr;
   place-content: stretch;
 
