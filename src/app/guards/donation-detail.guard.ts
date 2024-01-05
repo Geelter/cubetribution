@@ -9,7 +9,7 @@ export const donationDetailGuard: CanActivateFn = () => {
 
   return donationsService.selectedDonation$.pipe(
     switchMap(async (selectedDonation) =>
-      selectedDonation ? true : router.parseUrl('/donation/list')
+      selectedDonation ? true : router.parseUrl('/donations/list')
     )
   );
 };

@@ -32,7 +32,7 @@ export class SupabaseAuthService {
       return;
     }
 
-    this.router.navigate(['/browse']);
+    this.router.navigate(['/browser']);
   }
 
   async signUpWithEmail(username: string, email: string, password: string) {
@@ -57,7 +57,7 @@ export class SupabaseAuthService {
       return;
     }
 
-    this.router.navigate(['/browse']);
+    this.router.navigate(['/browser']);
   }
 
   async signOut() {
@@ -73,7 +73,7 @@ export class SupabaseAuthService {
       return;
     }
 
-    this.router.navigate(['/auth/signin']);
+    this.router.navigate(['/auth', 'signin']);
   }
 
   authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {

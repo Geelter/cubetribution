@@ -9,7 +9,7 @@ export const collectionDetailGuard: CanActivateFn = () => {
 
   return collectionsService.selectedCollection$.pipe(
     switchMap(async (selectedCollection) =>
-      selectedCollection ? true : router.parseUrl('/collection/list')
+      selectedCollection ? true : router.parseUrl('/collections/list')
     )
   );
 };

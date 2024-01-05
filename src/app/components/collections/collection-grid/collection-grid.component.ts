@@ -57,7 +57,7 @@ export class CollectionGridComponent {
 
   selectCollection(collection: Collection) {
     this.collectionsService.selectCollection(collection);
-    this.router.navigate([`/collection/detail`]);
+    this.router.navigate([`/collections`, 'list', 'detail']);
   }
 
   confirmDelete(collection: Collection) {

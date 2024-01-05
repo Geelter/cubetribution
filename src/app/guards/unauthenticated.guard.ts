@@ -7,5 +7,5 @@ export const unauthenticatedGuard: CanActivateFn = async () => {
   const authService = inject(SupabaseAuthService);
 
   const session = await authService.getSession();
-  return !session ? true : router.parseUrl('/cube/list');
+  return !session ? true : router.parseUrl('/cubes/list');
 };

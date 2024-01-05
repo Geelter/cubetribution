@@ -9,7 +9,7 @@ export const cubeDetailGuard: CanActivateFn = () => {
 
   return cubesService.selectedCube$.pipe(
     switchMap(async (selectedCube) =>
-      selectedCube ? true : router.parseUrl('/cube/list')
+      selectedCube ? true : router.parseUrl('/cubes/list')
     )
   );
 };

@@ -55,7 +55,7 @@ export class DonationGridComponent {
 
   selectDonation(donation: Donation) {
     this.donationsService.selectDonation(donation);
-    this.router.navigate(['/donation/detail']);
+    this.router.navigate(['/donations', 'list', 'detail']);
   }
 
   confirmDelete(donation: Donation) {
