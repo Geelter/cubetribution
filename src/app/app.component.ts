@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   private readonly collectionsService = inject(CollectionsService);
 
   title = 'cubetribution';
-  readonly home = {icon: 'pi pi-home', url: 'browser'}
+  readonly home = {icon: 'pi pi-home', routerLink: '/browser'}
 
   private readonly authenticatedItems = [
     {
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit {
 
       const label = child.snapshot.data['breadcrumb'];
       if (label != null) {
-        breadcrumbs.push({ label, url: newURL });
+        breadcrumbs.push({ label, routerLink: newURL });
       }
 
       // Recursively call createBreadcrumbs for each child route
