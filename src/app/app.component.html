@@ -1,8 +1,11 @@
-<p-menubar class="navbar" [model]="menuItems">
-  <ng-template pTemplate="end">
-    <app-theme-toggle></app-theme-toggle>
-  </ng-template>
-</p-menubar>
+<div class="navbar">
+  <p-menubar [model]="menuItems">
+    <ng-template pTemplate="end">
+      <app-theme-toggle></app-theme-toggle>
+    </ng-template>
+  </p-menubar>
+  <p-breadcrumb class="breadcrumb" [home]="home" [model]="breadcrumbItems"></p-breadcrumb>
+</div>
 <section>
   <router-outlet></router-outlet>
 </section>
