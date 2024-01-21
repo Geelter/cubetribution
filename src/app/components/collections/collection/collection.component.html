@@ -47,6 +47,6 @@
   <app-loading-spinner></app-loading-spinner>
 }
 
-@if (requestInProgress$ | async) {
+@if ((collectionsRequestState$ | async) == RequestState.InProgress) {
   <app-loading-spinner></app-loading-spinner>
 }
