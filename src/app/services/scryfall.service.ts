@@ -1,9 +1,10 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Card} from "../models/card";
-import {BehaviorSubject, catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
+import {BehaviorSubject, catchError, forkJoin, Observable, of, retry, switchMap, throwError} from "rxjs";
 import {ScryfallCollectionResponse} from "../models/scryfall-collection-response";
 import {ScryfallAutocompleteResponse} from "../models/scryfall-autocomplete-response";
+import {RequestState} from "../helpers/request-state.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,11 @@ export class ScryfallService {
 
   private readonly http = inject(HttpClient);
 
-  //TODO: Rewrite the code for flipping the subject value into something more elegant
-  private fetchInProgress = new BehaviorSubject<boolean>(false);
-  fetchInProgress$ = this.fetchInProgress.asObservable();
+  private requestState = new BehaviorSubject<RequestState>(RequestState.Initial);
+  requestState$ = this.requestState.asObservable();
 
   getCardsForAutocomplete(param: string): Observable<Card[]> {
-    this.fetchInProgress.next(true);
+    this.setRequestState(RequestState.InProgress)
 
     const autocompleteURL = `${this.BASE_API_URL}/autocomplete?q=${param}`;
 
@@ -27,15 +27,20 @@ export class ScryfallService {
       autocompleteURL,
       { headers: {'Content-Type': 'application/json'}}
     ).pipe(
+      retry(2),
+      catchError(() => {
+        this.setRequestState(RequestState.Failure);
+        return throwError(() => new Error('Scryfall request failed'));
+      }),
       switchMap((value, _) => {
-        this.fetchInProgress.next(false);
-        return this.getCardsForIDs(value.data)
+        this.setRequestState(RequestState.Success);
+        return this.getCardsForIDs(value.data);
       })
     );
   }
   getCardsForIDs(ids: string[]): Observable<Card[]> {
     if (ids.length) {
-      this.fetchInProgress.next(true);
+      this.setRequestState(RequestState.InProgress);
     }
 
     const idSlices = this.sliceIDArray(ids);
@@ -47,12 +52,13 @@ export class ScryfallService {
     return forkJoin(urls).pipe(
       switchMap(responses =>
         of(responses.flatMap(response => {
-          this.fetchInProgress.next(false);
+          this.setRequestState(RequestState.Success);
           return response.data.map(value => new Card(value))
         }))
       ),
+      retry(2),
       catchError(response => {
-        this.fetchInProgress.next(false);
+        this.setRequestState(RequestState.Failure);
         return throwError(() => new Error('Error fetching card collection'))
       })
     );
@@ -101,5 +107,9 @@ export class ScryfallService {
         { headers: {'Content-Type': 'application/json'} }
       )
     })
+  }
+
+  private setRequestState(state: RequestState) {
+    this.requestState.next(state);
   }
 }
