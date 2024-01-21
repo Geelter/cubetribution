@@ -184,13 +184,18 @@ export class CollectionsService {
     );
   }
 
-  async deleteCollection(collection: Collection) {
-    this.requestInProgress.next(true);
+  clearFetchedCollections() {
+    this.collections.next(new Map<number, Collection>());
+    this.setRequestState(RequestState.Initial);
+  }
 
-    const error = await this.databaseService.deleteCollection(collection.id);
+  selectCollection(collection: Collection) {
+    this.selectedCollection.next(collection.id);
+  }
 
-    if (!error) {
-      const collections = this.collections.getValue() ?? new Map<number, Collection>();
+  clearSelectedCollection() {
+    this.selectedCollection.next(null);
+  }
 
       collections.delete(collection.id);
 
@@ -216,13 +221,5 @@ export class CollectionsService {
 
   private setRequestState(state: RequestState) {
     this.requestState.next(state);
-  }
-
-  selectCollection(collection: Collection) {
-    this.selectedCollection.next(collection);
-  }
-
-  clearSelectedCollection() {
-    this.selectedCollection.next(null);
   }
 }
