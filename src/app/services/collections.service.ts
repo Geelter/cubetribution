@@ -22,8 +22,13 @@ export class CollectionsService {
     map((collectionMap) => Array.from(collectionMap.values()))
   );
 
-  private selectedCollection = new BehaviorSubject<Collection | null>(null);
-  selectedCollection$ = this.selectedCollection.asObservable();
+  private selectedCollection = new BehaviorSubject<number | null>(null);
+  selectedCollection$ = this.collections$.pipe(
+    combineLatestWith(this.selectedCollection.asObservable()),
+    map(([collections, chosenCollectionID]) =>
+      collections.find(collection => collection.id == chosenCollectionID)
+    )
+  );
 
   //TODO: Rewrite the code for flipping the subject value into something more elegant
   private requestInProgress = new BehaviorSubject<boolean>(false);
