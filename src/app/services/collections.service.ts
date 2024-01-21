@@ -197,26 +197,22 @@ export class CollectionsService {
     this.selectedCollection.next(null);
   }
 
-      collections.delete(collection.id);
-
-      this.collections.next(collections);
-    }
-
-    this.requestInProgress.next(false);
+  private convertArrayToMap(array: Collection[]) {
+    return new Map(array.map((collection) => [collection.id, collection]));
   }
 
-  private async updateCollectionInState(collection: Collection, cardIDs: string[]) {
-    const collections = this.collections.getValue() ?? new Map<number, Collection>();
+  private setCollectionInState(collection: Collection) {
+    const collectionsState = this.collections.getValue();
 
-    const error = await this.databaseService.updateCollectionCards(collection.id, cardIDs);
+    this.collections.next(collectionsState.set(collection.id, collection));
+  }
 
-    if (!error) {
-      collection.cardIDs = cardIDs;
-      collections.set(collection.id, collection);
+  private removeCollectionFromState(collection: Collection) {
+    const collectionsState = this.collections.getValue();
 
-      this.collections.next(collections);
-      this.emitSelectedCollectionIfMatches(collection);
-    }
+    collectionsState.delete(collection.id);
+
+    this.collections.next(collectionsState);
   }
 
   private setRequestState(state: RequestState) {
