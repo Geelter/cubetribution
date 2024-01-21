@@ -12,12 +12,17 @@
   </ng-template>
 </p-toolbar>
 
-@for (collection of collectionList$ | async; track collection.id) {
-  <app-collection-card [collection]="collection"
-                       (collectionClicked)="selectCollection(collection)"
-                       (deleteClicked)="confirmDelete(collection)"
-                       [deleteMode]="deleteMode"
-  ></app-collection-card>
+@if (collectionList$ | async; as collectionList) {
+  @for (collection of collectionList; track collection.id) {
+    <app-collection-card [collection]="collection"
+                         (collectionClicked)="selectCollection(collection)"
+                         (deleteClicked)="confirmDelete(collection)"
+                         [deleteMode]="deleteMode"
+    ></app-collection-card>
+  }
+}
+@if ((collectionsRequestState$ | async) == RequestState.InProgress) {
+  <app-loading-spinner></app-loading-spinner>
 }
 
 <p-confirmDialog [style]="{width: '40rem'}"
@@ -54,7 +59,3 @@
     ></p-button>
   </form>
 </p-dialog>
-
-@if (fetchInProgress$ | async) {
-  <app-loading-spinner></app-loading-spinner>
-}
