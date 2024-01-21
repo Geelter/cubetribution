@@ -71,8 +71,21 @@ export class CollectionGridComponent {
     })
   }
 
-  private deleteCollection(collection: Collection) {
-    this.collectionsService.deleteCollection(collection);
+  showSuccessMessage(summary: string) {
+    this.messageService.add({
+      key: 'global',
+      severity: 'success',
+      summary: summary
+    })
+  }
+
+  showErrorMessage(summary: string, detail: string = '') {
+    this.messageService.add({
+      key: 'global',
+      severity: 'error',
+      summary: summary,
+      detail: detail
+    })
   }
 
   constructor() {
