@@ -38,6 +38,6 @@
 
   <app-add-dialog [(dialogVisible)]="dialogVisible" [cardSelection]="selectedCards"></app-add-dialog>
 }
-@if (fetchInProgress$ | async) {
+@if ((requestState$ | async) == RequestState.InProgress) {
   <app-loading-spinner></app-loading-spinner>
 }
