@@ -64,38 +64,60 @@ export class CollectionsService {
     );
   }
 
-  async getCollections() {
-    this.requestInProgress.next(true);
+  createCollection(name: string, cards: Card[] = []) {
+    this.setRequestState(RequestState.InProgress);
+    const cardIDs = cards.map((card) => card.id);
 
-    const collections = await this.databaseService.fetchCollections();
+    return from(
+      this.supabase.client
+        .from('collections')
+        .insert({ name: name, card_ids: cardIDs })
+        .select()
+        .returns<Tables<'collections'>[]>()
+    ).pipe(
+      switchMap((result) => {
+        if (result.data && !result.error) {
+          const newCollection = new Collection(result.data[0]);
 
-    this.requestInProgress.next(false);
+          this.setCollectionInState(newCollection);
+          this.setRequestState(RequestState.Success);
 
-    if (collections) {
-      this.collections.next(collections);
-    }
+          return this.getCollections();
+        } else {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        }
+      }),
+      retry(2)
+    );
   }
 
-  clearFetchedCollections() {
-    this.collections.next(null);
+  deleteCollection(collection: Collection) {
+    this.setRequestState(RequestState.InProgress);
+
+    return from(
+      this.supabase.client
+        .from('collections')
+        .delete()
+        .eq('id', collection.id)
+    ).pipe(
+      switchMap(result => {
+        if (!result.error) {
+          this.removeCollectionFromState(collection);
+
+          this.setRequestState(RequestState.Success);
+          return this.getCollections();
+        } else {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message))
+        }
+      }),
+      retry(2)
+    );
   }
 
-  async createCollection(name: string, cards: Card[] = []) {
-    this.requestInProgress.next(true);
-
-    const createdCollection = await this.databaseService.createCollection(name, cards);
-
-    if (createdCollection) {
-      const currentCollections = this.collections.getValue() ?? new Map<number, Collection>();
-
-      this.collections.next(currentCollections.set(createdCollection.id, createdCollection));
-    }
-
-    this.requestInProgress.next(false);
-  }
-
-  async addCardsToCollection(collection: Collection, cards: Card[]) {
-    this.requestInProgress.next(true);
+  addCardsToCollection(collection: Collection, cards: Card[]) {
+    this.setRequestState(RequestState.InProgress);
 
     const idsToAdd = cards
       .map(card => card.id)
@@ -103,20 +125,63 @@ export class CollectionsService {
 
     const appendedIDs = [...idsToAdd, ...collection.cardIDs];
 
-    await this.updateCollectionInState(collection, appendedIDs);
+    return from(
+      this.supabase.client
+        .from('collections')
+        .update({ card_ids: appendedIDs })
+        .eq('id', collection.id)
+        .select()
+        .returns<Tables<'collections'>[]>()
+    ).pipe(
+      switchMap(result => {
+        if (result.data && !result.error) {
+          const updatedCollection = new Collection(result.data[0]);
 
-    this.requestInProgress.next(false);
+          //TODO: Change function name to suit pushing both new and updated collection objects
+          this.setCollectionInState(updatedCollection);
+          this.setRequestState(RequestState.Success);
+
+          return this.getCollections();
+        } else {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        }
+      }),
+      retry(2)
+    );
   }
 
-  async removeCardsFromCollection(collection: Collection, cards: Card[]) {
-    this.requestInProgress.next(true);
+  removeCardsFromCollection(collection: Collection, cards: Card[]) {
+    this.setRequestState(RequestState.InProgress);
 
     const idsToRemove = cards.map(card => card.id);
-    const filteredIDs = collection.cardIDs.filter(id => !idsToRemove.includes(id));
+    const filteredIDs = collection.cardIDs.filter(
+      id => !idsToRemove.includes(id)
+    );
 
-    await this.updateCollectionInState(collection, filteredIDs);
+    return from(
+      this.supabase.client
+        .from('collections')
+        .update({ card_ids: filteredIDs })
+        .eq('id', collection.id)
+        .select()
+        .returns<Tables<'collections'>[]>()
+    ).pipe(
+      switchMap(result => {
+        if (result.data && !result.error) {
+          const updatedCollection = new Collection(result.data[0]);
 
-    this.requestInProgress.next(false);
+          this.setCollectionInState(updatedCollection);
+          this.setRequestState(RequestState.Success);
+
+          return this.getCollections();
+        } else {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        }
+      }),
+      retry(2)
+    );
   }
 
   async deleteCollection(collection: Collection) {
