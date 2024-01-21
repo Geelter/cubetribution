@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CollectionCardComponent} from "../collection-card/collection-card.component";
 import {ToolbarModule} from "primeng/toolbar";
@@ -9,26 +9,54 @@ import {InputTextModule} from "primeng/inputtext";
 import {CollectionsService} from "../../../services/collections.service";
 import {Collection} from "../../../models/collection";
 import {Router} from "@angular/router";
-import {ConfirmationService} from "primeng/api";
+import {ConfirmationService, MessageService} from "primeng/api";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {dialogBreakpoints} from "../../../app.config";
 import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
+import {catchError, take, throwError} from "rxjs";
+import {RequestState} from "../../../helpers/request-state.enum";
 
 @Component({
   selector: 'app-collection-card-grid',
   standalone: true,
   imports: [CommonModule, CollectionCardComponent, ToolbarModule, ButtonModule, DialogModule, ReactiveFormsModule, InputTextModule, ConfirmDialogModule, LoadingSpinnerComponent],
   templateUrl: './collection-grid.component.html',
-  styleUrl: './collection-grid.component.scss'
+  styleUrl: './collection-grid.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CollectionGridComponent {
   protected readonly dialogBreakpoints = dialogBreakpoints;
+  protected readonly RequestState = RequestState;
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly collectionsService = inject(CollectionsService);
-  readonly collectionList$ = this.collectionsService.collections$;
-  readonly fetchInProgress$ = this.collectionsService.requestInProgress$;
+  private readonly messageService = inject(MessageService);
+
+  collectionList$ = this.collectionsService.collections$;
+  collectionsRequestState$ = this.collectionsService.requestState$;
+
+  showErrorDialog(error: Error) {
+    this.confirmationService.confirm({
+      message: error.message,
+      header: 'Error fetching collections',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.collectionsService.fetchCollections().pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorDialog(error);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe({
+          complete: (() => this.showSuccessMessage('Collections fetched'))
+        });
+      },
+      reject: () => {
+        this.router.navigate(['..']);
+      }
+    })
+  }
 
   collectionForm: FormGroup;
   dialogVisible: boolean = false;
