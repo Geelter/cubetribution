@@ -137,7 +137,6 @@ export class CollectionsService {
         if (result.data && !result.error) {
           const updatedCollection = new Collection(result.data[0]);
 
-          //TODO: Change function name to suit pushing both new and updated collection objects
           this.setCollectionInState(updatedCollection);
           this.setRequestState(RequestState.Success);
 
