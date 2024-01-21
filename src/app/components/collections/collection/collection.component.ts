@@ -1,40 +1,43 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Collection} from "../../../models/collection";
 import {CollectionsService} from "../../../services/collections.service";
 import {ButtonModule} from "primeng/button";
 import {CardListComponent} from "../../cards/card-list/card-list.component";
 import {SelectButtonModule} from "primeng/selectbutton";
-import {ConfirmationService, SharedModule} from "primeng/api";
+import {ConfirmationService, MessageService, SharedModule} from "primeng/api";
 import {ToolbarModule} from "primeng/toolbar";
 import {Card} from "../../../models/card";
 import {FormsModule} from "@angular/forms";
-import {combineLatestWith, map, Observable, switchMap} from "rxjs";
+import {catchError, combineLatestWith, map, Observable, switchMap, take, throwError} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {dialogBreakpoints, layoutOptions} from "../../../app.config";
 import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
 import {DonateDialogComponent} from "../../donate-dialog/donate-dialog.component";
 import {CardsService} from "../../../services/cards.service";
+import {RequestState} from "../../../helpers/request-state.enum";
 
 @Component({
   selector: 'app-collection',
   standalone: true,
   imports: [CommonModule, ButtonModule, CardListComponent, SelectButtonModule, SharedModule, ToolbarModule, FormsModule, DialogModule, ConfirmDialogModule, LoadingSpinnerComponent, DonateDialogComponent],
   templateUrl: './collection.component.html',
-  styleUrl: './collection.component.scss'
+  styleUrl: './collection.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CollectionComponent {
   protected readonly dialogBreakpoints = dialogBreakpoints;
   protected readonly layoutOptions = layoutOptions;
+  protected readonly RequestState = RequestState;
   private readonly collectionsService = inject(CollectionsService);
+  private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly cardsService = inject(CardsService);
 
-  private readonly collection$: Observable<Collection | null>;
-  private readonly collectionCards$: Observable<Card[]>;
-  vm$: Observable<{collection: Collection | null, collectionCards: Card[]}>;
-  requestInProgress$ = this.collectionsService.requestInProgress$;
+  private readonly collection$: Observable<Collection | undefined> = this.collectionsService.selectedCollection$;
+  vm$: Observable<{collection: Collection | undefined, collectionCards: Card[]}> = this.createViewModel(this.collection$);
+  readonly collectionsRequestState$ = this.collectionsService.requestState$;
 
   dialogVisible: boolean = false;
   selectedCards: Card[] = [];
@@ -56,22 +59,33 @@ export class CollectionComponent {
     })
   }
 
-  deleteSelectedCards(collection: Collection) {
-    this.collectionsService.removeCardsFromCollection(collection, this.selectedCards).then(() => this.selectedCards = []
-    );
-  }
-
-  constructor() {
-    this.collection$ = this.collectionsService.selectedCollection$;
-    this.collectionCards$ = this.collectionsService.selectedCollection$.pipe(
+  createViewModel(sourceObservable$: Observable<Collection | undefined>) {
+    const collectionCards$ = sourceObservable$.pipe(
       switchMap(collection =>
         this.cardsService.getCardsForIDs(collection?.cardIDs ?? [])
       )
     );
 
-    this.vm$ = this.collection$.pipe(
-      combineLatestWith(this.collectionCards$),
-      map(([collection, collectionCards]) => ({ collection, collectionCards}))
+    return sourceObservable$.pipe(
+      combineLatestWith(collectionCards$),
+      map(([collection, collectionCards]) => ({ collection, collectionCards }))
     );
+  }
+
+  showSuccessMessage(summary: string) {
+    this.messageService.add({
+      key: 'global',
+      severity: 'success',
+      summary: summary
+    })
+  }
+
+  showErrorMessage(summary: string, detail: string = '') {
+    this.messageService.add({
+      key: 'global',
+      severity: 'error',
+      summary: summary,
+      detail: detail
+    })
   }
 }
