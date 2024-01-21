@@ -1,24 +1,26 @@
 import {inject, Injectable} from '@angular/core';
-import {SupabaseDatabaseService} from "./supabase/supabase-database.service";
-import {BehaviorSubject, map} from "rxjs";
-import {Collection} from "../models/collection";
-import {Card} from "../models/card";
+import {BehaviorSubject, combineLatestWith, from, map, retry, switchMap, throwError} from 'rxjs';
+import {Collection} from '../models/collection';
+import {Card} from '../models/card';
+import {Tables} from '../models/supabase';
+import {SupabaseClientService} from './supabase/supabase-client.service';
+import {RequestState} from "../helpers/request-state.enum";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CollectionsService {
-  private readonly databaseService = inject(SupabaseDatabaseService);
+  private readonly supabase = inject(SupabaseClientService);
 
-  private collections = new BehaviorSubject<Map<number, Collection> | null>(null);
-  collections$ = this.collections.asObservable()
-    .pipe(
-      map(collectionMap => {
-        return collectionMap
-          ? Array.from(collectionMap.values())
-          : null
-      })
-    );
+  private requestState = new BehaviorSubject<RequestState>(RequestState.Initial);
+  requestState$ = this.requestState.asObservable();
+
+  private collections = new BehaviorSubject<Map<number, Collection>>(
+    new Map<number, Collection>()
+  );
+  collections$ = this.collections.asObservable().pipe(
+    map((collectionMap) => Array.from(collectionMap.values()))
+  );
 
   private selectedCollection = new BehaviorSubject<Collection | null>(null);
   selectedCollection$ = this.selectedCollection.asObservable();
@@ -120,12 +122,8 @@ export class CollectionsService {
     }
   }
 
-  private emitSelectedCollectionIfMatches(collection: Collection) {
-    const selectedCollection = this.selectedCollection.getValue();
-
-    if (selectedCollection && selectedCollection.id === collection.id) {
-      this.selectedCollection.next(collection);
-    }
+  private setRequestState(state: RequestState) {
+    this.requestState.next(state);
   }
 
   selectCollection(collection: Collection) {
