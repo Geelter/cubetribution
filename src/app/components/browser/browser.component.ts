@@ -1,7 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BehaviorSubject, debounceTime, distinctUntilChanged, Observable, tap} from "rxjs";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {
+  BehaviorSubject,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  of,
+  switchMap
+} from "rxjs";
 import {ScryfallService} from "../../services/scryfall.service";
 import {Card} from "../../models/card";
 import {InputTextModule} from "primeng/inputtext";
@@ -17,6 +23,8 @@ import {ListboxModule} from "primeng/listbox";
 import {AddDialogComponent} from "../add-dialog/add-dialog.component";
 import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.component";
 import {layoutOptions} from "../../app.config";
+import {MessageService} from "primeng/api";
+import {RequestState} from "../../helpers/request-state.enum";
 
 @Component({
   selector: 'app-browser',
@@ -26,24 +34,24 @@ import {layoutOptions} from "../../app.config";
   styleUrls: ['./browser.component.scss']
 })
 export class BrowserComponent {
+  protected readonly RequestState = RequestState;
   protected readonly layoutOptions = layoutOptions;
   private readonly scryfall = inject(ScryfallService);
+  private readonly messageService = inject(MessageService);
 
   private inputValue = new BehaviorSubject<string | undefined>(undefined);
-  private inputValue$ = this.inputValue.asObservable()
-      .pipe(
-          takeUntilDestroyed(),
-          debounceTime(1000),
-          distinctUntilChanged(),
-          tap(value => {
-                if (value) {
-                  this.browsedCards$ = this.scryfall.getCardsForAutocomplete(value);
-                }
-          })
-      ).subscribe();
+  browsedCards$ = this.inputValue.asObservable().pipe(
+    debounceTime(1000),
+    distinctUntilChanged(),
+    switchMap(value => this.scryfall.getCardsForAutocomplete(value ?? '').pipe(
+      catchError(error => {
+        this.showError(error);
+        return of([] as Card[]);
+      })
+    )),
+  );
 
-  browsedCards$: Observable<Card[]> | undefined;
-  fetchInProgress$ = this.scryfall.fetchInProgress$;
+  readonly requestState$ = this.scryfall.requestState$;
   selectedCards: Card[] = [];
   dialogVisible: boolean = false;
 
@@ -60,6 +68,14 @@ export class BrowserComponent {
   }
 
   onInputChange(input: string) {
-      this.inputValue.next(input);
+    this.inputValue.next(input);
+  }
+
+  showError(error: Error) {
+    this.messageService.add({
+      key: 'global',
+      severity: 'error',
+      summary: error.message
+    })
   }
 }
