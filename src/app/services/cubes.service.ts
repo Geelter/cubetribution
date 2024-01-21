@@ -1,49 +1,73 @@
 import {inject, Injectable} from '@angular/core';
-import {SupabaseDatabaseService} from "./supabase/supabase-database.service";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, combineLatestWith, from, map, retry, switchMap, throwError} from "rxjs";
 import {Cube} from "../models/cube";
+import {SupabaseClientService} from "./supabase/supabase-client.service";
+import {RequestState} from "../helpers/request-state.enum";
+import {Tables} from "../models/supabase";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CubesService {
-  private readonly databaseService = inject(SupabaseDatabaseService);
+  private readonly supabase = inject(SupabaseClientService);
 
-  private cubes = new BehaviorSubject<Cube[] | null>(null);
+  private requestState = new BehaviorSubject<RequestState>(RequestState.Initial);
+  requestState$ = this.requestState.asObservable();
+
+  private cubes = new BehaviorSubject<Cube[]>([]);
   cubes$ = this.cubes.asObservable();
 
-  private selectedCube = new BehaviorSubject<Cube | null>(null);
-  selectedCube$ = this.selectedCube.asObservable();
+  private selectedCube = new BehaviorSubject<number | null>(null);
+  selectedCube$ = this.cubes$.pipe(
+    combineLatestWith(this.selectedCube.asObservable()),
+    map(([cubes, chosenCubeID]) =>
+      cubes.find(cube => cube.id == chosenCubeID)
+    )
+  );
 
-  //TODO: Rewrite the code for flipping the subject value into something more elegant
-  private requestInProgress = new BehaviorSubject<boolean>(false);
-  requestInProgress$ = this.requestInProgress.asObservable();
-
-  async initializeCubes() {
-    const cubesValue = this.cubes.getValue();
-
-    if (!cubesValue || !cubesValue.length) {
-      await this.getCubes();
+  getCubes() {
+    if (this.requestState.getValue() == RequestState.Success) {
+      return this.cubes$;
+    } else {
+      return this.fetchCubes();
     }
   }
 
-  async getCubes() {
-    this.requestInProgress.next(true);
+  fetchCubes() {
+    this.setRequestState(RequestState.InProgress);
 
-    const cubes = await this.databaseService.fetchCubes();
-
-    if (cubes) {
-      this.cubes.next(cubes);
-    }
-
-    this.requestInProgress.next(false);
+    return from(
+      this.supabase.client
+        .from('cubes')
+        .select()
+        .returns<Tables<'cubes'>[]>()
+    ).pipe(
+      switchMap(result => {
+        if (result.data && !result.error) {
+          const fetchedCubes = result.data.map(
+            value => new Cube(value)
+          );
+          this.cubes.next(fetchedCubes);
+          this.setRequestState(RequestState.Success);
+          return this.cubes$;
+        } else {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        }
+      }),
+      retry(2)
+    );
   }
 
   selectCube(cube: Cube) {
-    this.selectedCube.next(cube);
+    this.selectedCube.next(cube.id);
   }
 
   clearSelectedCube() {
     this.selectedCube.next(null);
+  }
+
+  private setRequestState(state: RequestState) {
+    this.requestState.next(state);
   }
 }
