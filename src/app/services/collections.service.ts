@@ -30,16 +30,38 @@ export class CollectionsService {
     )
   );
 
-  //TODO: Rewrite the code for flipping the subject value into something more elegant
-  private requestInProgress = new BehaviorSubject<boolean>(false);
-  requestInProgress$ = this.requestInProgress.asObservable();
-
-  async initializeCollections() {
-    const collectionsValue = this.collections.getValue();
-
-    if (!collectionsValue || !collectionsValue.size) {
-      await this.getCollections();
+  getCollections() {
+    if (this.requestState.getValue() == RequestState.Success) {
+      return this.collections$;
+    } else {
+      return this.fetchCollections();
     }
+  }
+
+  fetchCollections() {
+    this.setRequestState(RequestState.InProgress);
+
+    return from(
+      this.supabase.client
+        .from('collections')
+        .select()
+        .returns<Tables<'collections'>[]>()
+    ).pipe(
+      switchMap((result) => {
+        if (result.data && !result.error) {
+          const fetchedCollections = result.data.map(
+            (value) => new Collection(value)
+          );
+          this.collections.next(this.convertArrayToMap(fetchedCollections));
+          this.setRequestState(RequestState.Success);
+          return this.collections$;
+        } else {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        }
+      }),
+      retry(2)
+    );
   }
 
   async getCollections() {
