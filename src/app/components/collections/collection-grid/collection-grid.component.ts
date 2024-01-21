@@ -70,17 +70,33 @@ export class CollectionGridComponent {
     this.deleteMode = !this.deleteMode;
   }
 
-  async createCollection() {
+  createCollection() {
     const { name } = this.collectionForm.value;
 
-    await this.collectionsService.createCollection(name);
+    this.collectionsService.createCollection(name).pipe(
+      take(1),
+      catchError(error => {
+        this.showErrorMessage('Creating collection failed', error.message);
+        return throwError(() => new Error(error));
+      })
+    ).subscribe({
+      complete: (() => this.showSuccessMessage('Collection created'))
+    });
 
     this.collectionForm.reset();
     this.dialogVisible = false;
   }
 
   refreshCollections() {
-    this.collectionsService.getCollections();
+    this.collectionsService.fetchCollections().pipe(
+      take(1),
+      catchError(error => {
+        this.showErrorMessage('Fetching collections failed', error.message);
+        return throwError(() => new Error(error));
+      })
+    ).subscribe({
+      complete: (() => this.showSuccessMessage('Collections refreshed'))
+    });
   }
 
   selectCollection(collection: Collection) {
@@ -94,7 +110,15 @@ export class CollectionGridComponent {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.deleteCollection(collection);
+        this.collectionsService.deleteCollection(collection).pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorMessage('Deleting collection failed', error.message);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe({
+          complete: (() => this.showSuccessMessage('Collection deleted'))
+        });
       }
     })
   }
@@ -121,6 +145,12 @@ export class CollectionGridComponent {
       name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(60)]]
     });
 
-    this.collectionsService.initializeCollections();
+    this.collectionsService.getCollections().pipe(
+      take(1),
+      catchError(error => {
+        this.showErrorDialog(error);
+        return throwError(() => new Error(error));
+      })
+    ).subscribe();
   }
 }
