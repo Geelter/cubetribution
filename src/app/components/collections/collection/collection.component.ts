@@ -54,7 +54,15 @@ export class CollectionComponent {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.deleteSelectedCards(collection);
+        this.collectionsService.removeCardsFromCollection(collection, this.selectedCards).pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorMessage('Deleting selected cards failed', error.message);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe({
+          complete: (() => this.showSuccessMessage('Selected cards deleted'))
+        });
       }
     })
   }
