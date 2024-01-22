@@ -47,6 +47,16 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'stats',
+    loadComponent: () => import('./components/stats/dashboard/dashboard.component').then(
+      m => m.DashboardComponent
+    ),
+    data: {
+      title: 'Stats',
+      breadcrumb: 'Stats'
+    }
+  },
+  {
     path: 'browser',
     loadComponent: () => import('./components/browser/browser.component').then(
       m => m.BrowserComponent
