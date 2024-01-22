@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Collection} from "../../models/collection";
 import {CollectionsService} from "../../services/collections.service";
@@ -22,7 +22,8 @@ import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.compon
   standalone: true,
   imports: [CommonModule, ButtonModule, DialogModule, FormsModule, InputTextModule, ListboxModule, ReactiveFormsModule, SharedModule, DividerModule, ConfirmDialogModule, LoadingSpinnerComponent],
   templateUrl: './add-dialog.component.html',
-  styleUrl: './add-dialog.component.scss'
+  styleUrl: './add-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddDialogComponent {
   @Input({ required: true }) dialogVisible!: boolean;

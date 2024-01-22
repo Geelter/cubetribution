@@ -36,11 +36,12 @@
         class="w-full"
         formControlName="name"
       />
-      <label for="name">New Collection</label>
+      <label for="name">Collection Name</label>
     </span>
 
-    <p-button label="Create with selection"
+    <p-button label="Create new collection"
               styleClass="w-full"
+              type="submit"
               [disabled]="!collectionForm.valid"></p-button>
   </form>
 </p-dialog>
