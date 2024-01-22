@@ -1,13 +1,6 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {
-  BehaviorSubject,
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  of,
-  switchMap
-} from "rxjs";
+import {BehaviorSubject, catchError, debounceTime, distinctUntilChanged, of, switchMap} from "rxjs";
 import {ScryfallService} from "../../services/scryfall.service";
 import {Card} from "../../models/card";
 import {InputTextModule} from "primeng/inputtext";
@@ -31,7 +24,8 @@ import {RequestState} from "../../helpers/request-state.enum";
   standalone: true,
   imports: [CommonModule, InputTextModule, ButtonModule, RippleModule, ToolbarModule, SelectButtonModule, FormsModule, CardListComponent, DropdownModule, DialogModule, ReactiveFormsModule, ListboxModule, AddDialogComponent, LoadingSpinnerComponent],
   templateUrl: './browser.component.html',
-  styleUrls: ['./browser.component.scss']
+  styleUrls: ['./browser.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BrowserComponent {
   protected readonly RequestState = RequestState;
