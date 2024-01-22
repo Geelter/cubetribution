@@ -109,7 +109,7 @@ export class CollectionsService {
           return this.getCollections();
         } else {
           this.setRequestState(RequestState.Failure);
-          return throwError(() => new Error(result.error.message))
+          return throwError(() => new Error(result.error.message));
         }
       }),
       retry(2)
