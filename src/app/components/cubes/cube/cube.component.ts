@@ -29,7 +29,7 @@ export class CubeComponent {
   private readonly cardsService = inject(CardsService);
 
   private readonly cube$: Observable<Cube | undefined> = this.cubesService.selectedCube$;
-  vm$: Observable<{cube: Cube | undefined; cubeCards: Card[]}> = this.createViewModel(this.cube$);
+  readonly vm$: Observable<{cube: Cube | undefined; cubeCards: Card[]}> = this.createViewModel(this.cube$);
 
   dialogVisible: boolean = false;
   selectedCards: Card[] = [];
@@ -40,7 +40,7 @@ export class CubeComponent {
     this.dialogVisible = true;
   }
 
-  createViewModel(sourceObservable$: Observable<Cube | undefined>) {
+  private createViewModel(sourceObservable$: Observable<Cube | undefined>) {
     const cubeCards$ = sourceObservable$.pipe(
       switchMap(cube =>
         this.cardsService.getCardsForIDs(cube?.cardIDs ?? [])

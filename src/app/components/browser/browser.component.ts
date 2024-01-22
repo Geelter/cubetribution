@@ -34,7 +34,7 @@ export class BrowserComponent {
   private readonly messageService = inject(MessageService);
 
   private inputValue = new BehaviorSubject<string | undefined>(undefined);
-  browsedCards$ = this.inputValue.asObservable().pipe(
+  readonly browsedCards$ = this.inputValue.asObservable().pipe(
     debounceTime(1000),
     distinctUntilChanged(),
     switchMap(value => this.scryfall.getCardsForAutocomplete(value ?? '').pipe(

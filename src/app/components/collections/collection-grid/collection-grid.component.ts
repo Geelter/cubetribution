@@ -33,10 +33,10 @@ export class CollectionGridComponent {
   private readonly collectionsService = inject(CollectionsService);
   private readonly messageService = inject(MessageService);
 
-  collectionList$ = this.collectionsService.collections$;
-  collectionsRequestState$ = this.collectionsService.requestState$;
+  readonly collectionList$ = this.collectionsService.collections$;
+  readonly collectionsRequestState$ = this.collectionsService.requestState$;
 
-  showErrorDialog(error: Error) {
+  private showErrorDialog(error: Error) {
     this.confirmationService.confirm({
       message: error.message,
       header: 'Error fetching collections',

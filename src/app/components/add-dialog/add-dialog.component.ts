@@ -38,11 +38,11 @@ export class AddDialogComponent {
   private readonly collectionsService = inject(CollectionsService);
 
   collectionForm: FormGroup;
-  collections$ = this.collectionsService.collections$;
-  collectionsRequestState$ = this.collectionsService.requestState$;
+  readonly collections$ = this.collectionsService.collections$;
+  readonly collectionsRequestState$ = this.collectionsService.requestState$;
   selectedCollection: Collection | null = null;
 
-  showErrorDialog(error: Error) {
+  private showErrorDialog(error: Error) {
     this.confirmationService.confirm({
       message: error.message,
       header: 'Error fetching collections',

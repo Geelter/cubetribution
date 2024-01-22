@@ -30,7 +30,9 @@ export class DonationGridComponent {
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
   private readonly donationsService = inject(DonationsService);
+
   private readonly donationList$ = this.donationsService.donations$;
+  readonly donationsRequestState$ = this.donationsService.requestState$;
 
   readonly pendingDonations$ = this.donationList$.pipe(
     map(donations => donations?.filter(donation => !donation.accepted) ?? [])
@@ -40,9 +42,7 @@ export class DonationGridComponent {
     map(donations => donations?.filter(donation => donation.accepted) ?? [])
   );
 
-  donationsRequestState$ = this.donationsService.requestState$;
-
-  showErrorDialog(error: Error) {
+  private showErrorDialog(error: Error) {
     this.confirmationService.confirm({
       message: error.message,
       header: 'Error fetching donations',
@@ -65,7 +65,7 @@ export class DonationGridComponent {
   }
 
   selectedDonationStatus: string = 'pending';
-  donationStatusOptions = [
+  readonly donationStatusOptions = [
     { label: 'Pending', status: 'pending' },
     { label: 'Accepted', status: 'accepted' }
   ];

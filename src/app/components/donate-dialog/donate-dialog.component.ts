@@ -36,12 +36,12 @@ export class DonateDialogComponent {
   private readonly cubesService = inject(CubesService);
   private readonly donationsService = inject(DonationsService);
 
-  cubes$ = this.cubesService.cubes$;
-  cubesRequestState$ = this.cubesService.requestState$;
-  donationsRequestState$ = this.donationsService.requestState$;
+  readonly cubes$ = this.cubesService.cubes$;
+  readonly cubesRequestState$ = this.cubesService.requestState$;
+  readonly donationsRequestState$ = this.donationsService.requestState$;
   selectedCube: Cube | null = null;
 
-  showErrorDialog(error: Error) {
+  private showErrorDialog(error: Error) {
     this.confirmationService.confirm({
       message: error.message,
       header: 'Error fetching cubes',

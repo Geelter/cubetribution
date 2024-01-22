@@ -36,7 +36,7 @@ export class CollectionComponent {
   private readonly cardsService = inject(CardsService);
 
   private readonly collection$: Observable<Collection | undefined> = this.collectionsService.selectedCollection$;
-  vm$: Observable<{collection: Collection | undefined, collectionCards: Card[]}> = this.createViewModel(this.collection$);
+  readonly vm$: Observable<{collection: Collection | undefined, collectionCards: Card[]}> = this.createViewModel(this.collection$);
   readonly collectionsRequestState$ = this.collectionsService.requestState$;
 
   dialogVisible: boolean = false;
@@ -68,7 +68,7 @@ export class CollectionComponent {
     })
   }
 
-  createViewModel(sourceObservable$: Observable<Collection | undefined>) {
+  private createViewModel(sourceObservable$: Observable<Collection | undefined>) {
     const collectionCards$ = sourceObservable$.pipe(
       switchMap(collection =>
         this.cardsService.getCardsForIDs(collection?.cardIDs ?? [])

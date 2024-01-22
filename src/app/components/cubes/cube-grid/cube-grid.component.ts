@@ -29,10 +29,10 @@ export class CubeGridComponent {
   private readonly messageService = inject(MessageService);
   private readonly cubesService = inject(CubesService);
 
-  cubesList$ = this.cubesService.cubes$;
-  cubesRequestState$ = this.cubesService.requestState$;
+  readonly cubesList$ = this.cubesService.cubes$;
+  readonly cubesRequestState$ = this.cubesService.requestState$;
 
-  showErrorDialog(error: Error) {
+  private showErrorDialog(error: Error) {
     this.confirmationService.confirm({
       message: error.message,
       header: 'Error fetching cubes',
@@ -71,7 +71,7 @@ export class CubeGridComponent {
     this.router.navigate(['/cubes', 'list', 'detail']);
   }
 
-  showSuccessMessage(summary: string) {
+  private showSuccessMessage(summary: string) {
     this.messageService.add({
       key: 'global',
       severity: 'success',
@@ -79,7 +79,7 @@ export class CubeGridComponent {
     })
   }
 
-  showErrorMessage(summary: string, detail: string = '') {
+  private showErrorMessage(summary: string, detail: string = '') {
     this.messageService.add({
       key: 'global',
       severity: 'error',

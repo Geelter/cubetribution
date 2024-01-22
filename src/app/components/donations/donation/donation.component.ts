@@ -33,7 +33,7 @@ export class DonationComponent {
   private readonly cardsService = inject(CardsService);
 
   private readonly donation$: Observable<Donation | undefined> = this.donationsService.selectedDonation$;
-  vm$: Observable<{donation: Donation | undefined, donationCards: Card[]}> = this.createViewModel(this.donation$);
+  readonly vm$: Observable<{donation: Donation | undefined, donationCards: Card[]}> = this.createViewModel(this.donation$);
   readonly donationsRequestState$ = this.donationsService.requestState$;
 
   selectedCards: Card[] = [];
@@ -59,7 +59,7 @@ export class DonationComponent {
     });
   }
 
-  createViewModel(sourceObservable$: Observable<Donation | undefined>) {
+  private createViewModel(sourceObservable$: Observable<Donation | undefined>) {
     const donationCards$ = sourceObservable$.pipe(
       switchMap(donation =>
         this.cardsService.getCardsForIDs(donation?.cardIDs ?? [])
