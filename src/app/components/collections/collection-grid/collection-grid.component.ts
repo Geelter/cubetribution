@@ -123,7 +123,7 @@ export class CollectionGridComponent {
     })
   }
 
-  showSuccessMessage(summary: string) {
+  private showSuccessMessage(summary: string) {
     this.messageService.add({
       key: 'global',
       severity: 'success',
@@ -131,7 +131,7 @@ export class CollectionGridComponent {
     })
   }
 
-  showErrorMessage(summary: string, detail: string = '') {
+  private showErrorMessage(summary: string, detail: string = '') {
     this.messageService.add({
       key: 'global',
       severity: 'error',
