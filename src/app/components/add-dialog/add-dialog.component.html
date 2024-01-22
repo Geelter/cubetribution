@@ -44,3 +44,9 @@
               [disabled]="!collectionForm.valid"></p-button>
   </form>
 </p-dialog>
+<p-confirmDialog [breakpoints]="dialogBreakpoints"
+                 [style]="{ width: '40rem' }"
+></p-confirmDialog>
+@if ((collectionsRequestState$ | async) == RequestState.InProgress) {
+  <app-loading-spinner></app-loading-spinner>
+}

@@ -20,3 +20,9 @@
     ></p-button>
   }
 </p-dialog>
+<p-confirmDialog [breakpoints]="dialogBreakpoints"
+                 [style]="{ width: '40rem' }"
+></p-confirmDialog>
+@if ((cubesRequestState$ | async) == RequestState.InProgress || (donationsRequestState$ | async) == RequestState.InProgress) {
+  <app-loading-spinner></app-loading-spinner>
+}
