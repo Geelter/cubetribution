@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {Card} from "../../../models/card";
 
@@ -7,7 +7,8 @@ import {Card} from "../../../models/card";
   standalone: true,
   imports: [CommonModule, NgOptimizedImage],
   templateUrl: './card.component.html',
-  styleUrls: ['./card.component.scss']
+  styleUrls: ['./card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent {
   isFlipped = false;
