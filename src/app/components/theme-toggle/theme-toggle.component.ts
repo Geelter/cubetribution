@@ -1,7 +1,7 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {ThemeLoaderService} from "../../services/theme-loader/theme-loader.service";
+import {ThemeLoaderService, ThemeMode} from "../../services/theme-loader/theme-loader.service";
 
 @Component({
   selector: 'app-theme-toggle',
@@ -29,7 +29,7 @@ export class ThemeToggleComponent  implements OnInit, OnDestroy {
   onCheckboxClick() {
     this.isChecked = !this.isChecked;
     this.isForced = true;
-    const colorMode = this.isChecked ? 'light' : 'dark';
+    const colorMode = this.isChecked ? ThemeMode.Light : ThemeMode.Dark;
     this.setColorMode(colorMode);
     this.themeService.switchTheme(colorMode);
   }
@@ -38,7 +38,7 @@ export class ThemeToggleComponent  implements OnInit, OnDestroy {
     this.setColorMode();
     this.isChecked = window.matchMedia('(prefers-color-scheme: light)').matches;
     this.isForced = false;
-    this.themeService.switchTheme(this.isChecked ? 'light' : 'dark');
+    this.themeService.switchTheme(this.isChecked ? ThemeMode.Light : ThemeMode.Dark);
   }
 
   ngOnInit() {
@@ -60,7 +60,7 @@ export class ThemeToggleComponent  implements OnInit, OnDestroy {
     this.darkModeListener = (e) => {
       if (!document.documentElement.getAttribute('data-force-color-mode')) {
         this.isChecked = (e as MediaQueryListEvent).matches;
-        const themeMode = this.isChecked ? 'light' : 'dark';
+        const themeMode = this.isChecked ? ThemeMode.Light : ThemeMode.Dark;
         this.themeService.switchTheme(themeMode);
       }
     }
