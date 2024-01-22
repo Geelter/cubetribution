@@ -153,6 +153,7 @@ export const routes: Routes = [
   },
   {
     path: 'donations',
+    canActivate: [authenticatedGuard],
     data: {
       breadcrumb: 'Donations'
     },
