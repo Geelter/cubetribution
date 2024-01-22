@@ -63,7 +63,8 @@ export class CollectionComponent {
         ).subscribe({
           complete: (() => this.showSuccessMessage('Selected cards deleted'))
         });
-      }
+      },
+      key: 'deleteDialog'
     })
   }
 

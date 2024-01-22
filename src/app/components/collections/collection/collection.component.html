@@ -35,7 +35,8 @@
                    [(selectedCards)]="selectedCards"
                    [selectedLayout]="selectedLayout"
     ></app-card-list>
-    <p-confirmDialog [breakpoints]="dialogBreakpoints"
+    <p-confirmDialog key="deleteDialog"
+                     [breakpoints]="dialogBreakpoints"
                      [style]="{ width: '40rem' }"
     ></p-confirmDialog>
 
