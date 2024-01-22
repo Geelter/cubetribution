@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {Collection} from "../../../models/collection";
 import {ButtonModule} from "primeng/button";
@@ -8,7 +8,8 @@ import {ButtonModule} from "primeng/button";
   standalone: true,
   imports: [CommonModule, NgOptimizedImage, ButtonModule],
   templateUrl: './collection-card.component.html',
-  styleUrl: './collection-card.component.scss'
+  styleUrl: './collection-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CollectionCardComponent {
   @Input({ required: true }) collection!: Collection;

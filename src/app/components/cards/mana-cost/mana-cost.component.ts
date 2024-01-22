@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -6,7 +6,8 @@ import {CommonModule} from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './mana-cost.component.html',
-  styleUrl: './mana-cost.component.scss'
+  styleUrl: './mana-cost.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ManaCostComponent implements OnInit {
   @Input({ required: true }) manaCost!: string;

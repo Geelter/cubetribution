@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardGridComponent} from "../card-grid/card-grid.component";
 import {Card} from "../../../models/card";
@@ -14,7 +14,8 @@ import {ManaCostComponent} from "../mana-cost/mana-cost.component";
   standalone: true,
   imports: [CommonModule, CardGridComponent, ButtonModule, SharedModule, TableModule, CardComponent, SkeletonModule, ManaCostComponent],
   templateUrl: './card-list.component.html',
-  styleUrl: './card-list.component.scss'
+  styleUrl: './card-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardListComponent {
   @Input({ required: true }) selectedLayout!: string;
