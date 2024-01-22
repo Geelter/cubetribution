@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ButtonModule} from "primeng/button";
 import {CardListComponent} from "../../cards/card-list/card-list.component";
@@ -20,20 +20,19 @@ import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.com
   standalone: true,
   imports: [CommonModule, ButtonModule, CardListComponent, SelectButtonModule, ToolbarModule, FormsModule, DialogModule, AddDialogComponent, LoadingSpinnerComponent],
   templateUrl: './cube.component.html',
-  styleUrl: './cube.component.scss'
+  styleUrl: './cube.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CubeComponent {
   protected readonly layoutOptions = layoutOptions;
   private readonly cubesService = inject(CubesService);
   private readonly cardsService = inject(CardsService);
 
-  private readonly cube$: Observable<Cube | null>;
-  private readonly cubeCards$: Observable<Card[]>;
-  vm$: Observable<{cube: Cube | null; cubeCards: Card[]}>;
-  requestInProgress$ = this.cubesService.requestInProgress$;
+  private readonly cube$: Observable<Cube | undefined> = this.cubesService.selectedCube$;
+  vm$: Observable<{cube: Cube | undefined; cubeCards: Card[]}> = this.createViewModel(this.cube$);
 
-  selectedCards: Card[] = [];
   dialogVisible: boolean = false;
+  selectedCards: Card[] = [];
 
   selectedLayout: string = 'grid';
 
@@ -41,16 +40,15 @@ export class CubeComponent {
     this.dialogVisible = true;
   }
 
-  constructor() {
-    this.cube$ = this.cubesService.selectedCube$;
-    this.cubeCards$ = this.cubesService.selectedCube$.pipe(
+  createViewModel(sourceObservable$: Observable<Cube | undefined>) {
+    const cubeCards$ = sourceObservable$.pipe(
       switchMap(cube =>
         this.cardsService.getCardsForIDs(cube?.cardIDs ?? [])
       )
     );
 
-    this.vm$ = this.cube$.pipe(
-      combineLatestWith(this.cubeCards$),
+    return sourceObservable$.pipe(
+      combineLatestWith(cubeCards$),
       map(([cube, cubeCards]) => ({ cube, cubeCards }))
     );
   }
