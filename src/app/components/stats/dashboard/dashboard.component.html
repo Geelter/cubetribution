@@ -1,1 +1,23 @@
-<p>dashboard works!</p>
+<p-card header="Vintage" [subheader]="currentDate.toLocaleDateString()" styleClass="text-center">
+  <p-table [value]="playerScores">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Rank</th>
+        <th>Player</th>
+        <th>Points</th>
+        <th>W-L-D</th>
+        <th>OMW%</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-score>
+      <tr>
+        <td>{{score.rank}}</td>
+        <td>{{score.player}}</td>
+        <td>{{score.points}}</td>
+        <td>{{score.wld}}</td>
+        <td>{{score.omw}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</p-card>
