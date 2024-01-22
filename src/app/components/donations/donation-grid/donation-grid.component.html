@@ -30,6 +30,9 @@
                      [deleteMode]="deleteMode"
   ></app-donation-card>
 }
+@if ((donationsRequestState$ | async) == RequestState.InProgress) {
+  <app-loading-spinner></app-loading-spinner>
+}
 
 <p-confirmDialog [style]="{width: '40rem'}"
                  [breakpoints]="dialogBreakpoints"
