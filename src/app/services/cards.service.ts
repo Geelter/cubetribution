@@ -7,7 +7,7 @@ import {from, switchMap, tap} from "rxjs";
   providedIn: 'root'
 })
 export class CardsService {
-  private readonly scryfallService = inject(ScryfallService);
+  private readonly scryfall = inject(ScryfallService);
 
   private fetchedCards: Map<string, Card> = new Map<string, Card>();
 
@@ -15,7 +15,7 @@ export class CardsService {
     const missingIDs = this.filterOutPresentCards(cardIDs);
 
     return missingIDs.length
-      ? this.scryfallService.getCardsForIDs(missingIDs)
+      ? this.scryfall.getCardsForIDs(missingIDs)
       .pipe(
         tap(cards => {
           cards.forEach(card => this.fetchedCards.set(card.id, card));
