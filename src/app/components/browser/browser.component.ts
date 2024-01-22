@@ -52,7 +52,7 @@ export class BrowserComponent {
   selectedLayout: string = 'grid';
 
   selectedCardPool: string = 'results';
-  cardPoolOptions = [
+  readonly cardPoolOptions = [
     { label: 'Search', cardPool: 'results' },
     { label: 'Selection', cardPool: 'selection' }
   ];
@@ -65,7 +65,7 @@ export class BrowserComponent {
     this.inputValue.next(input);
   }
 
-  showError(error: Error) {
+  private showError(error: Error) {
     this.messageService.add({
       key: 'global',
       severity: 'error',
