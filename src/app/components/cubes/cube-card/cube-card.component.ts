@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {Cube} from "../../../models/cube";
 
@@ -7,7 +7,8 @@ import {Cube} from "../../../models/cube";
   standalone: true,
   imports: [CommonModule, NgOptimizedImage],
   templateUrl: './cube-card.component.html',
-  styleUrl: './cube-card.component.scss'
+  styleUrl: './cube-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CubeCardComponent {
   @Input({ required: true }) cube!: Cube;

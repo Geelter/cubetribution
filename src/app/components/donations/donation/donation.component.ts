@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DonationsService} from "../../../services/donations.service";
 import {CardsService} from "../../../services/cards.service";
@@ -21,7 +21,8 @@ import {RequestState} from "../../../helpers/request-state.enum";
   standalone: true,
   imports: [CommonModule, ToolbarModule, SharedModule, SelectButtonModule, ButtonModule, FormsModule, LoadingSpinnerComponent, CardListComponent, ConfirmDialogModule],
   templateUrl: './donation.component.html',
-  styleUrl: './donation.component.scss'
+  styleUrl: './donation.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DonationComponent {
   protected readonly dialogBreakpoints = dialogBreakpoints;

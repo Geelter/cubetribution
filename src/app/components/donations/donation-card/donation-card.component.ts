@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {ButtonModule} from "primeng/button";
 import {Donation} from "../../../models/donation";
@@ -8,7 +8,8 @@ import {Donation} from "../../../models/donation";
   standalone: true,
   imports: [CommonModule, ButtonModule, NgOptimizedImage],
   templateUrl: './donation-card.component.html',
-  styleUrl: './donation-card.component.scss'
+  styleUrl: './donation-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DonationCardComponent {
   @Input({ required: true }) donation!: Donation;
