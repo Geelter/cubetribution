@@ -50,13 +50,13 @@ export class ScryfallService {
     const urls = this.createRequestsForPayloads(payloads);
 
     return forkJoin(urls).pipe(
-      switchMap(responses =>
-        of(responses.flatMap(response => {
-          this.setRequestState(RequestState.Success);
-          return response.data.map(value => new Card(value))
-        }))
-      ),
-      retry(2),
+      map(responses => {
+        this.setRequestState(RequestState.Success);
+        return responses.flatMap(response =>
+          response.data.map(value => new Card(value))
+        )
+      }),
+      retry({ count: 2, delay: 1000 }),
       catchError(response => {
         this.setRequestState(RequestState.Failure);
         return throwError(() => new Error('Error fetching card collection'))
