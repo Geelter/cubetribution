@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Card} from "../models/card";
-import {BehaviorSubject, catchError, forkJoin, Observable, of, retry, switchMap, throwError} from "rxjs";
+import {BehaviorSubject, catchError, forkJoin, map, Observable, retry, switchMap, throwError} from "rxjs";
 import {ScryfallCollectionResponse} from "../models/scryfall-collection-response";
 import {ScryfallAutocompleteResponse} from "../models/scryfall-autocomplete-response";
 import {RequestState} from "../helpers/request-state.enum";
@@ -27,7 +27,7 @@ export class ScryfallService {
       autocompleteURL,
       { headers: {'Content-Type': 'application/json'}}
     ).pipe(
-      retry(2),
+      retry({ count: 2, delay: 1000 }),
       catchError(() => {
         this.setRequestState(RequestState.Failure);
         return throwError(() => new Error('Scryfall request failed'));

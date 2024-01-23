@@ -55,7 +55,7 @@ export class CubesService {
           return throwError(() => new Error(result.error.message));
         }
       }),
-      retry(2)
+      retry({ count: 2, delay: 1000 }),
     );
   }
 

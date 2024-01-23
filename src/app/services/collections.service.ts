@@ -60,7 +60,7 @@ export class CollectionsService {
           return throwError(() => new Error(result.error.message));
         }
       }),
-      retry(2)
+      retry({ count: 2, delay: 1000 }),
     );
   }
 
@@ -88,7 +88,7 @@ export class CollectionsService {
           return throwError(() => new Error(result.error.message));
         }
       }),
-      retry(2)
+      retry({ count: 2, delay: 1000 }),
     );
   }
 
@@ -112,7 +112,7 @@ export class CollectionsService {
           return throwError(() => new Error(result.error.message));
         }
       }),
-      retry(2)
+      retry({ count: 2, delay: 1000 }),
     );
   }
 
@@ -146,7 +146,7 @@ export class CollectionsService {
           return throwError(() => new Error(result.error.message));
         }
       }),
-      retry(2)
+      retry({ count: 2, delay: 1000 }),
     );
   }
 
@@ -179,7 +179,7 @@ export class CollectionsService {
           return throwError(() => new Error(result.error.message));
         }
       }),
-      retry(2)
+      retry({ count: 2, delay: 1000 }),
     );
   }
 
