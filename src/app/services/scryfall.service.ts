@@ -30,7 +30,7 @@ export class ScryfallService {
       retry({ count: 2, delay: 1000 }),
       catchError(() => {
         this.setRequestState(RequestState.Failure);
-        return throwError(() => new Error('Scryfall request failed'));
+        return throwError(() => new Error('Scryfall search request failed'));
       }),
       switchMap((value, _) => {
         this.setRequestState(RequestState.Success);
@@ -38,6 +38,7 @@ export class ScryfallService {
       })
     );
   }
+
   getCardsForIDs(ids: string[]): Observable<Card[]> {
     if (ids.length) {
       this.setRequestState(RequestState.InProgress);
@@ -50,16 +51,16 @@ export class ScryfallService {
     const urls = this.createRequestsForPayloads(payloads);
 
     return forkJoin(urls).pipe(
+      retry({ count: 2, delay: 1000 }),
+      catchError(error => {
+        this.setRequestState(RequestState.Failure);
+        return throwError(() => new Error('Error fetching card collection'))
+      }),
       map(responses => {
         this.setRequestState(RequestState.Success);
         return responses.flatMap(response =>
           response.data.map(value => new Card(value))
         )
-      }),
-      retry({ count: 2, delay: 1000 }),
-      catchError(response => {
-        this.setRequestState(RequestState.Failure);
-        return throwError(() => new Error('Error fetching card collection'))
       })
     );
   }
