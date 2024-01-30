@@ -1,20 +1,20 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DialogModule} from "primeng/dialog";
-import {CubesService} from "../../services/cubes.service";
-import {DonationsService} from "../../services/donations.service";
-import {Cube} from "../../models/cube";
-import {Collection} from "../../models/collection";
+import {CubesService} from "../../../services/cubes.service";
+import {DonationsService} from "../../../services/donations.service";
+import {Cube} from "../../../models/cube";
+import {Collection} from "../../../models/collection";
 import {ListboxModule} from "primeng/listbox";
 import {FormsModule} from "@angular/forms";
 import {ButtonModule} from "primeng/button";
 import {catchError, take, throwError} from "rxjs";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
-import {dialogBreakpoints} from "../../app.config";
+import {dialogBreakpoints} from "../../../app.config";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {Router} from "@angular/router";
-import {RequestState} from "../../helpers/request-state.enum";
-import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.component";
+import {RequestState} from "../../../helpers/request-state.enum";
+import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-donate-dialog',

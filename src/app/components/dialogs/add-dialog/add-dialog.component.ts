@@ -1,21 +1,21 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Collection} from "../../models/collection";
-import {CollectionsService} from "../../services/collections.service";
+import {Collection} from "../../../models/collection";
+import {CollectionsService} from "../../../services/collections.service";
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {ListboxModule} from "primeng/listbox";
 import {ConfirmationService, MessageService, SharedModule} from "primeng/api";
-import {Card} from "../../models/card";
+import {Card} from "../../../models/card";
 import {DividerModule} from "primeng/divider";
-import {dialogBreakpoints} from "../../app.config";
+import {dialogBreakpoints} from "../../../app.config";
 import {catchError, take, throwError} from "rxjs";
 import {Router} from "@angular/router";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
-import {RequestState} from "../../helpers/request-state.enum";
-import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.component";
+import {RequestState} from "../../../helpers/request-state.enum";
+import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-add-dialog',
