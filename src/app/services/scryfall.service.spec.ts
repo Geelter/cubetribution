@@ -158,7 +158,28 @@ describe('ScryfallService', () => {
       flushMicrotasks();
     }));
 
-    it('should set request state to Success if no errors', fakeAsync(() => {
+    it('should not make a collection request for empty autocomplete response', fakeAsync(() => {
+      const setRequestStateSpy = createSpy('setRequestState');
+      spyOn<any>(scryfallService, 'setRequestState').and.callFake(setRequestStateSpy);
+
+      scryfallService.getCardsForAutocomplete(query).subscribe();
+
+      httpTestingController
+        .expectOne(autocompleteURL)
+        .flush({
+          object: 'catalog',
+          total_values: 0,
+          data: []
+        });
+
+      httpTestingController.expectNone(`${baseURL}/collection`);
+
+      expect(setRequestStateSpy).toHaveBeenCalledTimes(2);
+
+      flushMicrotasks();
+    }));
+
+    it(`should set request state to 'Success' if no errors`, fakeAsync(() => {
       const setRequestStateSpy = createSpy('setRequestState');
       spyOn<any>(scryfallService, 'setRequestState').and.callFake(setRequestStateSpy);
 
