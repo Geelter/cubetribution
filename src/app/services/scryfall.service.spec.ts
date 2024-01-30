@@ -1,8 +1,4 @@
-import {
-  fakeAsync,
-  flushMicrotasks,
-  TestBed, tick,
-} from '@angular/core/testing';
+import {fakeAsync, flushMicrotasks, TestBed, tick,} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 import {ScryfallService} from './scryfall.service';
@@ -10,26 +6,8 @@ import {Card} from "../models/card";
 import {RequestState} from "../helpers/request-state.enum";
 import {ScryfallCollectionResponse} from "../models/scryfall-collection-response";
 import {ScryfallAutocompleteResponse} from "../models/scryfall-autocomplete-response";
+import {generateCardDataForID} from "../helpers/tests/generate-card-data-for-id";
 import createSpy = jasmine.createSpy;
-
-function generateCardDataForID(id: string) {
-  return {
-    id: id,
-    name: `card for ID ${id}`,
-    image_uris: {
-      small: `https://cards.scryfall.io/small/${id}.jpg`,
-      normal: `https://cards.scryfall.io/normal/${id}.jpg`,
-      large: `https://cards.scryfall.io/large/${id}.jpg`,
-      png: `https://cards.scryfall.io/png/${id}.jpg`,
-      art_crop: `https://cards.scryfall.io/art_crop/${id}.jpg`,
-      border_crop: `https://cards.scryfall.io/border_crop/${id}.jpg`
-    },
-    mana_cost: '{1}{R}{B}',
-    cmc: 3,
-    rarity: 'rare',
-    scryfallURI: `https://api.scryfall.com/cards/${id}`
-  }
-}
 
 describe('ScryfallService', () => {
   let scryfallService: ScryfallService;
