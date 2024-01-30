@@ -20,7 +20,8 @@
     ></p-button>
   }
 </p-dialog>
-<p-confirmDialog [breakpoints]="dialogBreakpoints"
+<p-confirmDialog [key]="this.DIALOG_KEY"
+                 [breakpoints]="dialogBreakpoints"
                  [style]="{ width: '40rem' }"
 ></p-confirmDialog>
 @if ((cubesRequestState$ | async) == RequestState.InProgress || (donationsRequestState$ | async) == RequestState.InProgress) {

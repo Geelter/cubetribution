@@ -30,6 +30,7 @@ export class DonateDialogComponent {
   @Output() dialogVisibleChange = new EventEmitter<boolean>();
   protected readonly RequestState = RequestState;
   protected readonly dialogBreakpoints = dialogBreakpoints;
+  protected readonly DIALOG_KEY = 'donateDialog';
   private readonly router = inject(Router);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
@@ -44,8 +45,9 @@ export class DonateDialogComponent {
   private showErrorDialog(error: Error) {
     this.confirmationService.confirm({
       message: error.message,
-      header: 'Error fetching cubes',
+      header: 'Do you want to retry?',
       icon: 'pi pi-exclamation-triangle',
+      key: this.DIALOG_KEY,
       accept: () => {
         this.cubesService.fetchCubes().pipe(
           take(1),
@@ -53,9 +55,7 @@ export class DonateDialogComponent {
             this.showErrorDialog(error);
             return throwError(() => new Error(error));
           })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Cubes fetched'))
-        });
+        ).subscribe();
       },
       reject: () => {
         this.router.navigate(['..']);
