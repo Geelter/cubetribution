@@ -31,6 +31,7 @@ export class AddDialogComponent {
   @Output() dialogVisibleChange = new EventEmitter<boolean>();
   protected readonly RequestState = RequestState;
   protected readonly dialogBreakpoints = dialogBreakpoints;
+  protected readonly DIALOG_KEY = 'addDialog';
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly messageService = inject(MessageService);
@@ -47,6 +48,7 @@ export class AddDialogComponent {
       message: error.message,
       header: 'Error fetching collections',
       icon: 'pi pi-exclamation-triangle',
+      key: this.DIALOG_KEY,
       accept: () => {
         this.collectionsService.fetchCollections().pipe(
           take(1),

@@ -45,7 +45,8 @@
               [disabled]="!collectionForm.valid"></p-button>
   </form>
 </p-dialog>
-<p-confirmDialog [breakpoints]="dialogBreakpoints"
+<p-confirmDialog [key]="DIALOG_KEY"
+                 [breakpoints]="dialogBreakpoints"
                  [style]="{ width: '40rem' }"
 ></p-confirmDialog>
 @if ((collectionsRequestState$ | async) == RequestState.InProgress) {
