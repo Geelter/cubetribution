@@ -27,8 +27,20 @@
                    [(selectedCards)]="selectedCards"
                    [selectedLayout]="selectedLayout"
     ></app-card-list>
-    <app-add-dialog [(dialogVisible)]="dialogVisible" [cardSelection]="selectedCards"></app-add-dialog>
+    <p-confirmDialog [breakpoints]="dialogBreakpoints"
+                     [style]="{ width: '40rem' }"
+    ></p-confirmDialog>
+
+    <app-add-dialog [(dialogVisible)]="dialogVisible"
+                    [cardSelection]="selectedCards"></app-add-dialog>
   }
 } @else {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+@if (
+  (cubesRequestState$ | async) == RequestState.InProgress ||
+  (cardsRequestState$ | async) == RequestState.InProgress
+  ) {
   <app-loading-spinner></app-loading-spinner>
 }
