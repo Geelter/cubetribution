@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DonationsService} from "../../../services/donations.service";
 import {CardsService} from "../../../services/cards.service";
-import {catchError, combineLatestWith, map, Observable, switchMap, take, throwError} from "rxjs";
+import {catchError, combineLatestWith, map, Observable, take, tap, throwError} from "rxjs";
 import {Donation} from "../../../models/donation";
 import {Card} from "../../../models/card";
 import {ToolbarModule} from "primeng/toolbar";
@@ -15,6 +15,7 @@ import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.com
 import {CardListComponent} from "../../cards/card-list/card-list.component";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {RequestState} from "../../../helpers/request-state.enum";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-donation',
@@ -32,10 +33,12 @@ export class DonationComponent {
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly cardsService = inject(CardsService);
+  private readonly router = inject(Router);
 
   private readonly donation$: Observable<Donation | undefined> = this.donationsService.selectedDonation$;
   readonly vm$: Observable<{donation: Donation | undefined, donationCards: Card[]}> = this.createViewModel(this.donation$);
   readonly donationsRequestState$ = this.donationsService.requestState$;
+  readonly cardsRequestState$ = this.cardsService.requestState$;
 
   selectedCards: Card[] = [];
 
@@ -61,14 +64,18 @@ export class DonationComponent {
   }
 
   private createViewModel(sourceObservable$: Observable<Donation | undefined>) {
-    const donationCards$ = sourceObservable$.pipe(
-      switchMap(donation =>
-        this.cardsService.getCardsForIDs(donation?.cardIDs ?? [])
-      )
-    );
-
     return sourceObservable$.pipe(
-      combineLatestWith(donationCards$),
+      tap(collection => {
+        const ids = collection?.cardIDs ?? [];
+        this.cardsService.getCardsForIDs(ids).pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorDialog(error, ids);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe();
+      }),
+      combineLatestWith(this.cardsService.requestedCards$),
       map(([donation, donationCards]) => ({ donation, donationCards }))
     );
   }

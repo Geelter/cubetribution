@@ -9,14 +9,15 @@ import {ConfirmationService, MessageService, SharedModule} from "primeng/api";
 import {ToolbarModule} from "primeng/toolbar";
 import {Card} from "../../../models/card";
 import {FormsModule} from "@angular/forms";
-import {catchError, combineLatestWith, map, Observable, switchMap, take, throwError} from "rxjs";
+import {catchError, combineLatestWith, map, Observable, switchMap, take, tap, throwError} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {dialogBreakpoints, layoutOptions} from "../../../app.config";
 import {LoadingSpinnerComponent} from "../../loading-spinner/loading-spinner.component";
-import {DonateDialogComponent} from "../../donate-dialog/donate-dialog.component";
+import {DonateDialogComponent} from "../../dialogs/donate-dialog/donate-dialog.component";
 import {CardsService} from "../../../services/cards.service";
 import {RequestState} from "../../../helpers/request-state.enum";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-collection',
@@ -30,6 +31,7 @@ export class CollectionComponent {
   protected readonly dialogBreakpoints = dialogBreakpoints;
   protected readonly layoutOptions = layoutOptions;
   protected readonly RequestState = RequestState;
+  private readonly router = inject(Router);
   private readonly collectionsService = inject(CollectionsService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
@@ -38,6 +40,7 @@ export class CollectionComponent {
   private readonly collection$: Observable<Collection | undefined> = this.collectionsService.selectedCollection$;
   readonly vm$: Observable<{collection: Collection | undefined, collectionCards: Card[]}> = this.createViewModel(this.collection$);
   readonly collectionsRequestState$ = this.collectionsService.requestState$;
+  readonly cardsRequestState$ = this.cardsService.requestState$;
 
   dialogVisible: boolean = false;
   selectedCards: Card[] = [];
@@ -69,24 +72,20 @@ export class CollectionComponent {
   }
 
   private createViewModel(sourceObservable$: Observable<Collection | undefined>) {
-    const collectionCards$ = sourceObservable$.pipe(
-      switchMap(collection =>
-        this.cardsService.getCardsForIDs(collection?.cardIDs ?? [])
-      )
-    );
-
     return sourceObservable$.pipe(
-      combineLatestWith(collectionCards$),
+      tap(collection => {
+        const ids = collection?.cardIDs ?? [];
+        this.cardsService.getCardsForIDs(ids).pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorDialog(error, ids);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe();
+      }),
+      combineLatestWith(this.cardsService.requestedCards$),
       map(([collection, collectionCards]) => ({ collection, collectionCards }))
     );
-  }
-
-  private showSuccessMessage(summary: string) {
-    this.messageService.add({
-      key: 'global',
-      severity: 'success',
-      summary: summary
-    })
   }
 
   private showErrorMessage(summary: string, detail: string = '') {
