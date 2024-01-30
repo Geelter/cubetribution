@@ -26,6 +26,7 @@ describe('ScryfallService', () => {
   afterEach(() => {
     // Confirm there are no outstanding requests
     httpTestingController.verify();
+    scryfallService['requestState'].next(RequestState.Initial);
   })
 
   it('should be created', () => {
