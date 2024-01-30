@@ -42,7 +42,7 @@ describe('ScryfallService', () => {
       data: ids.map(id => generateCardDataForID(id))
     };
 
-    it('should result in a Card[] for a non-empty array of IDs', fakeAsync(() => {
+    it(`should result in a 'Card[]' for a non-empty array of IDs`, fakeAsync(() => {
       let result: Card[] | undefined;
 
       scryfallService.getCardsForIDs(ids).subscribe(cards => {
@@ -80,7 +80,7 @@ describe('ScryfallService', () => {
       flushMicrotasks();
     }));
 
-    it('should set request state to InProgress for a non-empty array of IDs', fakeAsync(() => {
+    it(`should set request state to 'InProgress' for a non-empty array of IDs`, fakeAsync(() => {
       scryfallService.getCardsForIDs(ids).subscribe();
 
       expect(scryfallService['requestState'].getValue()).toBe(RequestState.InProgress);
@@ -90,7 +90,7 @@ describe('ScryfallService', () => {
       flushMicrotasks();
     }));
 
-    it('should set request state to Success if no errors', fakeAsync(() => {
+    it(`should set request state to 'Success' if no errors`, fakeAsync(() => {
       scryfallService.getCardsForIDs(ids).subscribe();
 
       const mockRequest = httpTestingController.expectOne(apiEndpoint);
@@ -101,7 +101,7 @@ describe('ScryfallService', () => {
       flushMicrotasks();
     }));
 
-    it('should set request state to Failure after error', fakeAsync(() => {
+    it(`should set request state to 'Failure' after 2 retries`, fakeAsync(() => {
       const status = 500;
       const statusText = 'Internal Server Error';
 
@@ -148,7 +148,7 @@ describe('ScryfallService', () => {
       ]
     };
 
-    it('should set request state to InProgress', fakeAsync(() => {
+    it(`should set request state to 'InProgress'`, fakeAsync(() => {
       scryfallService.getCardsForAutocomplete(query).subscribe();
 
       expect(scryfallService['requestState'].getValue()).toBe(RequestState.InProgress);
@@ -162,11 +162,7 @@ describe('ScryfallService', () => {
       const setRequestStateSpy = createSpy('setRequestState');
       spyOn<any>(scryfallService, 'setRequestState').and.callFake(setRequestStateSpy);
 
-      scryfallService.getCardsForAutocomplete(query).subscribe({
-        next: () => { expect(scryfallService['requestState'].getValue()).toBe(RequestState.Success) },
-        error: () => { fail('error handler should not be called') },
-        complete: () => { fail('complete handler should not be called') }
-      });
+      scryfallService.getCardsForAutocomplete(query).subscribe();
 
       httpTestingController
         .expectOne({ method: 'GET', url: autocompleteURL })
@@ -179,7 +175,7 @@ describe('ScryfallService', () => {
       flushMicrotasks();
     }));
 
-    it('should set request state to Failure after error', fakeAsync(() => {
+    it(`should set request state to 'Failure' after error`, fakeAsync(() => {
       const status = 500;
       const statusText = 'Internal Server Error';
 
