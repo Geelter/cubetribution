@@ -35,8 +35,7 @@
                    [(selectedCards)]="selectedCards"
                    [selectedLayout]="selectedLayout"
     ></app-card-list>
-    <p-confirmDialog key="deleteDialog"
-                     [breakpoints]="dialogBreakpoints"
+    <p-confirmDialog [breakpoints]="dialogBreakpoints"
                      [style]="{ width: '40rem' }"
     ></p-confirmDialog>
 
@@ -48,6 +47,9 @@
   <app-loading-spinner></app-loading-spinner>
 }
 
-@if ((collectionsRequestState$ | async) == RequestState.InProgress) {
+@if (
+  (collectionsRequestState$ | async) == RequestState.InProgress ||
+  (cardsRequestState$ | async) == RequestState.InProgress
+  ) {
   <app-loading-spinner></app-loading-spinner>
 }

@@ -35,6 +35,9 @@
   <app-loading-spinner></app-loading-spinner>
 }
 
-@if ((donationsRequestState$ | async) == RequestState.InProgress) {
+@if (
+  (donationsRequestState$ | async) == RequestState.InProgress ||
+  (cardsRequestState$ | async) == RequestState.InProgress
+  ) {
   <app-loading-spinner></app-loading-spinner>
 }
