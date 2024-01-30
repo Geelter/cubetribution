@@ -46,7 +46,7 @@ export class AddDialogComponent {
   private showErrorDialog(error: Error) {
     this.confirmationService.confirm({
       message: error.message,
-      header: 'Error fetching collections',
+      header: 'Do you want to retry?',
       icon: 'pi pi-exclamation-triangle',
       key: this.DIALOG_KEY,
       accept: () => {
@@ -56,9 +56,7 @@ export class AddDialogComponent {
             this.showErrorDialog(error);
             return throwError(() => new Error(error));
           })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Collections fetched'))
-        });
+        ).subscribe();
       },
       reject: () => {
         this.router.navigate(['..']);
