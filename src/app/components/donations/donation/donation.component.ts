@@ -63,6 +63,26 @@ export class DonationComponent implements OnDestroy {
     });
   }
 
+  private showErrorDialog(error: Error, cardIDs: string[]) {
+    this.confirmationService.confirm({
+      message: error.message,
+      header: 'Do you want to retry?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.cardsService.getCardsForIDs(cardIDs).pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorDialog(error, cardIDs);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe();
+      },
+      reject: () => {
+        this.router.navigate(['..']);
+      }
+    })
+  }
+
   private createViewModel(sourceObservable$: Observable<Donation | undefined>) {
     return sourceObservable$.pipe(
       tap(collection => {
