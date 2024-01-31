@@ -1,7 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {Card} from "../models/card";
 import {ScryfallService} from "./scryfall.service";
-import {from, switchMap, tap} from "rxjs";
+import {BehaviorSubject, catchError, from, map, switchMap, throwError} from "rxjs";
+import {RequestState} from "../helpers/request-state.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -10,19 +11,48 @@ export class CardsService {
   private readonly scryfall = inject(ScryfallService);
 
   private fetchedCards: Map<string, Card> = new Map<string, Card>();
+  private requestedCards = new BehaviorSubject<Card[]>([]);
+  requestedCards$ = this.requestedCards.asObservable();
+
+  private requestState = new BehaviorSubject<RequestState>(RequestState.Initial);
+  requestState$ = this.requestState.asObservable();
 
   getCardsForIDs(cardIDs: string[]) {
+    this.requestState.next(RequestState.InProgress);
+
     const missingIDs = this.filterOutPresentCards(cardIDs);
 
-    return missingIDs.length
-      ? this.scryfall.getCardsForIDs(missingIDs)
+    if (!missingIDs.length) {
+      return from(this.filterMap(cardIDs))
+        .pipe(
+          map(cards => {
+            this.requestState.next(RequestState.Success);
+            this.requestedCards.next(cards);
+            return null;
+          })
+        )
+    }
+
+    return this.scryfall.getCardsForIDs(missingIDs)
       .pipe(
-        tap(cards => {
-          cards.forEach(card => this.fetchedCards.set(card.id, card));
+        catchError(error => {
+          this.requestState.next(RequestState.Failure);
+          return throwError(() => new Error(error));
         }),
-        switchMap(_ => from(this.filterMap(cardIDs)))
-      )
-      : from(this.filterMap(cardIDs));
+        switchMap(cards => {
+          cards.forEach(card => this.fetchedCards.set(card.id, card));
+          return from(this.filterMap(cardIDs));
+        }),
+        map(cards => {
+          this.requestedCards.next(cards);
+          this.requestState.next(RequestState.Success);
+          return null;
+        })
+      );
+  }
+
+  clearRequestedCards() {
+    this.requestedCards.next([]);
   }
 
   private filterMap(cardIDs: string[]) {
