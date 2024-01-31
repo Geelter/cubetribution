@@ -13,7 +13,7 @@ import {CardListComponent} from "../cards/card-list/card-list.component";
 import {DropdownModule} from "primeng/dropdown";
 import {DialogModule} from "primeng/dialog";
 import {ListboxModule} from "primeng/listbox";
-import {AddDialogComponent} from "../add-dialog/add-dialog.component";
+import {AddDialogComponent} from "../dialogs/add-dialog/add-dialog.component";
 import {LoadingSpinnerComponent} from "../loading-spinner/loading-spinner.component";
 import {layoutOptions} from "../../app.config";
 import {MessageService} from "primeng/api";
