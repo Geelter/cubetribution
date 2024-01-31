@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Collection} from "../../../models/collection";
 import {CollectionsService} from "../../../services/collections.service";
@@ -27,7 +27,7 @@ import {Router} from "@angular/router";
   styleUrl: './collection.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CollectionComponent {
+export class CollectionComponent implements OnDestroy {
   protected readonly dialogBreakpoints = dialogBreakpoints;
   protected readonly layoutOptions = layoutOptions;
   protected readonly RequestState = RequestState;
@@ -95,5 +95,9 @@ export class CollectionComponent {
       summary: summary,
       detail: detail
     })
+  }
+
+  ngOnDestroy() {
+    this.cardsService.clearRequestedCards();
   }
 }

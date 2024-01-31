@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DonationsService} from "../../../services/donations.service";
 import {CardsService} from "../../../services/cards.service";
@@ -25,7 +25,7 @@ import {Router} from "@angular/router";
   styleUrl: './donation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DonationComponent {
+export class DonationComponent implements OnDestroy {
   protected readonly dialogBreakpoints = dialogBreakpoints;
   protected readonly layoutOptions = layoutOptions;
   protected readonly RequestState = RequestState;
@@ -95,5 +95,9 @@ export class DonationComponent {
       summary: summary,
       detail: detail
     })
+  }
+
+  ngOnDestroy() {
+    this.cardsService.clearRequestedCards();
   }
 }

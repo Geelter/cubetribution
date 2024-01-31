@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ButtonModule} from "primeng/button";
 import {CardListComponent} from "../../cards/card-list/card-list.component";
@@ -27,7 +27,7 @@ import {ConfirmDialogModule} from "primeng/confirmdialog";
   styleUrl: './cube.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CubeComponent {
+export class CubeComponent implements OnDestroy {
   protected readonly RequestState = RequestState;
   protected readonly dialogBreakpoints = dialogBreakpoints;
   protected readonly layoutOptions = layoutOptions;
@@ -65,5 +65,9 @@ export class CubeComponent {
       combineLatestWith(this.cardsService.requestedCards$),
       map(([cube, cubeCards]) => ({ cube, cubeCards }))
     );
+  }
+
+  ngOnDestroy() {
+    this.cardsService.clearRequestedCards();
   }
 }
