@@ -36,28 +36,6 @@ export class CollectionGridComponent {
   readonly collectionList$ = this.collectionsService.collections$;
   readonly collectionsRequestState$ = this.collectionsService.requestState$;
 
-  private showErrorDialog(error: Error) {
-    this.confirmationService.confirm({
-      message: error.message,
-      header: 'Error fetching collections',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.collectionsService.fetchCollections().pipe(
-          take(1),
-          catchError(error => {
-            this.showErrorDialog(error);
-            return throwError(() => new Error(error));
-          })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Collections fetched'))
-        });
-      },
-      reject: () => {
-        this.router.navigate(['..']);
-      }
-    })
-  }
-
   collectionForm: FormGroup;
   dialogVisible: boolean = false;
   deleteMode: boolean = false;
@@ -79,9 +57,7 @@ export class CollectionGridComponent {
         this.showErrorMessage('Creating collection failed', error.message);
         return throwError(() => new Error(error));
       })
-    ).subscribe({
-      complete: (() => this.showSuccessMessage('Collection created'))
-    });
+    ).subscribe();
 
     this.collectionForm.reset();
     this.dialogVisible = false;
@@ -94,9 +70,7 @@ export class CollectionGridComponent {
         this.showErrorMessage('Fetching collections failed', error.message);
         return throwError(() => new Error(error));
       })
-    ).subscribe({
-      complete: (() => this.showSuccessMessage('Collections refreshed'))
-    });
+    ).subscribe();
   }
 
   selectCollection(collection: Collection) {
@@ -119,6 +93,26 @@ export class CollectionGridComponent {
         ).subscribe({
           complete: (() => this.showSuccessMessage('Collection deleted'))
         });
+      }
+    })
+  }
+
+  private showErrorDialog(error: Error) {
+    this.confirmationService.confirm({
+      message: error.message,
+      header: 'Do you want to retry?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.collectionsService.fetchCollections().pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorDialog(error);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe();
+      },
+      reject: () => {
+        this.router.navigate(['..']);
       }
     })
   }
