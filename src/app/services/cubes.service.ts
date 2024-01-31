@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatestWith, from, map, retry, switchMap, throwError} from "rxjs";
+import {BehaviorSubject, combineLatestWith, from, map, of, retry, switchMap, throwError} from "rxjs";
 import {Cube} from "../models/cube";
 import {SupabaseClientService} from "./supabase/supabase-client.service";
 import {RequestState} from "../helpers/request-state.enum";
@@ -26,11 +26,13 @@ export class CubesService {
   );
 
   getCubes() {
-    if (this.requestState.getValue() == RequestState.Success) {
-      return this.cubes$;
-    } else {
-      return this.fetchCubes();
-    }
+    const requestState = this.requestState.getValue();
+    if (
+      requestState == RequestState.Success ||
+      requestState == RequestState.InProgress
+    ) return of(null);
+
+    return this.fetchCubes();
   }
 
   fetchCubes() {
@@ -43,17 +45,17 @@ export class CubesService {
         .returns<Tables<'cubes'>[]>()
     ).pipe(
       switchMap(result => {
-        if (result.data && !result.error) {
+        if (result.error) {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
           const fetchedCubes = result.data.map(
             value => new Cube(value)
           );
           this.cubes.next(fetchedCubes);
           this.setRequestState(RequestState.Success);
-          return this.cubes$;
-        } else {
-          this.setRequestState(RequestState.Failure);
-          return throwError(() => new Error(result.error.message));
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );

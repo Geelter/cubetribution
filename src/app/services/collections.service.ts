@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatestWith, from, map, retry, switchMap, throwError} from 'rxjs';
+import {BehaviorSubject, combineLatestWith, from, map, of, retry, switchMap, throwError} from 'rxjs';
 import {Collection} from '../models/collection';
 import {Card} from '../models/card';
 import {Tables} from '../models/supabase';
@@ -31,11 +31,13 @@ export class CollectionsService {
   );
 
   getCollections() {
-    if (this.requestState.getValue() == RequestState.Success) {
-      return this.collections$;
-    } else {
-      return this.fetchCollections();
-    }
+    const requestState = this.requestState.getValue();
+    if (
+      requestState == RequestState.Success ||
+      requestState == RequestState.InProgress
+    ) return of(null);
+
+    return this.fetchCollections();
   }
 
   fetchCollections() {
@@ -48,17 +50,17 @@ export class CollectionsService {
         .returns<Tables<'collections'>[]>()
     ).pipe(
       switchMap((result) => {
-        if (result.data && !result.error) {
+        if (result.error) {
+          this.setRequestState(RequestState.Failure)
+          return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
           const fetchedCollections = result.data.map(
             (value) => new Collection(value)
           );
           this.collections.next(this.convertArrayToMap(fetchedCollections));
           this.setRequestState(RequestState.Success);
-          return this.collections$;
-        } else {
-          this.setRequestState(RequestState.Failure);
-          return throwError(() => new Error(result.error.message));
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
@@ -76,17 +78,16 @@ export class CollectionsService {
         .returns<Tables<'collections'>[]>()
     ).pipe(
       switchMap((result) => {
-        if (result.data && !result.error) {
+        if (result.error) {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
           const newCollection = new Collection(result.data[0]);
 
           this.setCollectionInState(newCollection);
           this.setRequestState(RequestState.Success);
-
-          return this.getCollections();
-        } else {
-          this.setRequestState(RequestState.Failure);
-          return throwError(() => new Error(result.error.message));
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
@@ -102,15 +103,14 @@ export class CollectionsService {
         .eq('id', collection.id)
     ).pipe(
       switchMap(result => {
-        if (!result.error) {
-          this.removeCollectionFromState(collection);
-
-          this.setRequestState(RequestState.Success);
-          return this.getCollections();
-        } else {
+        if (result.error) {
           this.setRequestState(RequestState.Failure);
           return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
+          this.removeCollectionFromState(collection);
+          this.setRequestState(RequestState.Success);
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
@@ -134,17 +134,16 @@ export class CollectionsService {
         .returns<Tables<'collections'>[]>()
     ).pipe(
       switchMap(result => {
-        if (result.data && !result.error) {
+        if (result.error) {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
           const updatedCollection = new Collection(result.data[0]);
 
           this.setCollectionInState(updatedCollection);
           this.setRequestState(RequestState.Success);
-
-          return this.getCollections();
-        } else {
-          this.setRequestState(RequestState.Failure);
-          return throwError(() => new Error(result.error.message));
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
@@ -167,17 +166,16 @@ export class CollectionsService {
         .returns<Tables<'collections'>[]>()
     ).pipe(
       switchMap(result => {
-        if (result.data && !result.error) {
-          const updatedCollection = new Collection(result.data[0]);
-
-          this.setCollectionInState(updatedCollection);
-          this.setRequestState(RequestState.Success);
-
-          return this.getCollections();
-        } else {
+        if (result.error) {
           this.setRequestState(RequestState.Failure);
           return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
+          const updatedCollection = new Collection(result.data[0]);
+
+          this.setCollectionInState(collection);
+          this.setRequestState(RequestState.Success);
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );

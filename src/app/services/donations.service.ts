@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatestWith, from, map, retry, switchMap, throwError} from "rxjs";
+import {BehaviorSubject, combineLatestWith, from, map, of, retry, switchMap, throwError} from "rxjs";
 import {Donation} from "../models/donation";
 import {Collection} from "../models/collection";
 import {Cube} from "../models/cube";
@@ -33,11 +33,13 @@ export class DonationsService {
   );
 
   getDonations() {
-    if (this.requestState.getValue() == RequestState.Success) {
-      return this.donations$;
-    } else {
-      return this.fetchDonations();
-    }
+    const requestState = this.requestState.getValue();
+    if (
+      requestState == RequestState.Success ||
+      requestState == RequestState.InProgress
+    ) return of(null);
+
+    return this.fetchDonations();
   }
 
   fetchDonations() {
@@ -50,17 +52,17 @@ export class DonationsService {
         .returns<Tables<'donations'>[]>()
     ).pipe(
       switchMap(result => {
-        if (result.data && !result.error) {
+        if (result.error) {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
           const fetchedDonations = result.data.map(
             value => new Donation(value)
           );
           this.donations.next(this.convertArrayToMap(fetchedDonations));
           this.setRequestState(RequestState.Success);
-          return this.donations$;
-        } else {
-          this.setRequestState(RequestState.Failure);
-          return throwError(() => new Error(result.error.message));
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
@@ -78,17 +80,15 @@ export class DonationsService {
         .returns<Tables<'donations'>[]>()
     ).pipe(
       switchMap(result => {
-        if (result.data && !result.error) {
-          const newDonation = new Donation(result.data[0]);
-
-          this.setDonationInState(newDonation);
-          this.setRequestState(RequestState.Success);
-
-          return this.getDonations();
-        } else {
+        if (result.error) {
           this.setRequestState(RequestState.Failure);
           return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
+          const newDonation = new Donation(result.data[0]);
+          this.setDonationInState(newDonation);
+          this.setRequestState(RequestState.Success);
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
@@ -104,15 +104,14 @@ export class DonationsService {
         .eq('id', donation.id)
     ).pipe(
       switchMap(result => {
-        if (!result.error) {
-          this.removeDonationFromState(donation);
-
-          this.setRequestState(RequestState.Success);
-          return this.getDonations();
-        } else {
+        if (result.error) {
           this.setRequestState(RequestState.Failure);
           return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
+          this.removeDonationFromState(donation);
+          this.setRequestState(RequestState.Success);
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
@@ -133,17 +132,16 @@ export class DonationsService {
         .returns<Tables<'donations'>[]>()
     ).pipe(
       switchMap(result => {
-        if (result.data && !result.error) {
+        if (result.error) {
+          this.setRequestState(RequestState.Failure);
+          return throwError(() => new Error(result.error.message));
+        } else if (result.data) {
           const updatedDonation = new Donation(result.data[0]);
 
           this.setDonationInState(updatedDonation);
-          this.setRequestState(RequestState.Success);
-
-          return this.getDonations();
-        } else {
-          this.setRequestState(RequestState.Failure);
-          return throwError(() => new Error(result.error.message));
+          this.setRequestState(RequestState.Success)
         }
+        return of(null);
       }),
       retry({ count: 2, delay: 1000 }),
     );
