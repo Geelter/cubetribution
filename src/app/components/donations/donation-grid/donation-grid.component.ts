@@ -42,28 +42,6 @@ export class DonationGridComponent {
     map(donations => donations?.filter(donation => donation.accepted) ?? [])
   );
 
-  private showErrorDialog(error: Error) {
-    this.confirmationService.confirm({
-      message: error.message,
-      header: 'Error fetching donations',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.donationsService.fetchDonations().pipe(
-          take(1),
-          catchError(error => {
-            this.showErrorDialog(error);
-            return throwError(() => new Error(error));
-          })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Donations fetched'))
-        });
-      },
-      reject: () => {
-        this.router.navigate(['..']);
-      }
-    })
-  }
-
   selectedDonationStatus: string = 'pending';
   readonly donationStatusOptions = [
     { label: 'Pending', status: 'pending' },
@@ -85,9 +63,7 @@ export class DonationGridComponent {
         this.showErrorMessage('Fetching donations failed', error.message);
         return throwError(() => new Error(error));
       })
-    ).subscribe({
-      complete: (() => this.showSuccessMessage('Donations refreshed'))
-    });
+    ).subscribe();
   }
 
   selectDonation(donation: Donation) {
@@ -107,9 +83,7 @@ export class DonationGridComponent {
             this.showErrorMessage('Deleting donation failed', error.message);
             return throwError(() => new Error(error));
           })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Donation deleted'))
-        });
+        ).subscribe();
       }
     });
   }
@@ -118,11 +92,23 @@ export class DonationGridComponent {
     if (event.option.status == 'accepted') this.deleteMode = false;
   }
 
-  private showSuccessMessage(summary: string) {
-    this.messageService.add({
-      key: 'global',
-      severity: 'success',
-      summary: summary
+  private showErrorDialog(error: Error) {
+    this.confirmationService.confirm({
+      message: error.message,
+      header: 'Error fetching donations',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.donationsService.fetchDonations().pipe(
+          take(1),
+          catchError(error => {
+            this.showErrorDialog(error);
+            return throwError(() => new Error(error));
+          })
+        ).subscribe();
+      },
+      reject: () => {
+        this.router.navigate(['..']);
+      }
     })
   }
 

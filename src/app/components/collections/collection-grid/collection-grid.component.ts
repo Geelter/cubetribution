@@ -90,9 +90,7 @@ export class CollectionGridComponent {
             this.showErrorMessage('Deleting collection failed', error.message);
             return throwError(() => new Error(error));
           })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Collection deleted'))
-        });
+        ).subscribe();
       }
     })
   }
@@ -114,14 +112,6 @@ export class CollectionGridComponent {
       reject: () => {
         this.router.navigate(['..']);
       }
-    })
-  }
-
-  private showSuccessMessage(summary: string) {
-    this.messageService.add({
-      key: 'global',
-      severity: 'success',
-      summary: summary
     })
   }
 

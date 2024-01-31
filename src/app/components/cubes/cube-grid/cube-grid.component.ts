@@ -44,9 +44,7 @@ export class CubeGridComponent {
             this.showErrorDialog(error);
             return throwError(() => new Error(error));
           })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Cubes fetched'))
-        });
+        ).subscribe();
       },
       reject: () => {
         this.router.navigate(['..']);
@@ -61,22 +59,12 @@ export class CubeGridComponent {
         this.showErrorMessage('Fetching cubes failed', error.message);
         return throwError(() => new Error(error));
       })
-    ).subscribe({
-      complete: (() => this.showSuccessMessage('Cubes refreshed'))
-    });
+    ).subscribe();
   }
 
   selectCube(cube: Cube) {
     this.cubesService.selectCube(cube);
     this.router.navigate(['/cubes', 'list', 'detail']);
-  }
-
-  private showSuccessMessage(summary: string) {
-    this.messageService.add({
-      key: 'global',
-      severity: 'success',
-      summary: summary
-    })
   }
 
   private showErrorMessage(summary: string, detail: string = '') {

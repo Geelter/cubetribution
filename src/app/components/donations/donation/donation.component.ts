@@ -56,9 +56,7 @@ export class DonationComponent implements OnDestroy {
             this.showErrorMessage('Deleting selected cards failed', error.message);
             return throwError(() => new Error(error));
           })
-        ).subscribe({
-          complete: (() => this.showSuccessMessage('Selected cards deleted'))
-        });
+        ).subscribe();
       }
     });
   }
@@ -98,14 +96,6 @@ export class DonationComponent implements OnDestroy {
       combineLatestWith(this.cardsService.requestedCards$),
       map(([donation, donationCards]) => ({ donation, donationCards }))
     );
-  }
-
-  private showSuccessMessage(summary: string) {
-    this.messageService.add({
-      key: 'global',
-      severity: 'success',
-      summary: summary
-    })
   }
 
   private showErrorMessage(summary: string, detail: string = '') {
