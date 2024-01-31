@@ -11,6 +11,7 @@ import {ScrollTopModule} from "primeng/scrolltop";
 import {BreadcrumbModule} from "primeng/breadcrumb";
 import {filter} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {DonationsService} from "./services/donations.service";
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly authService = inject(SupabaseAuthService);
   private readonly collectionsService = inject(CollectionsService);
+  private readonly donationsService = inject(DonationsService);
 
   title = 'cubetribution';
   readonly home = {icon: 'pi pi-home', routerLink: '/browser'}
@@ -112,6 +114,7 @@ export class AppComponent implements OnInit {
       this.menuItems = session ? this.authenticatedItems : this.unauthenticatedItems;
       if (!session) {
         this.collectionsService.clearFetchedCollections();
+        this.donationsService.clearFetchedDonations();
       }
     });
   }

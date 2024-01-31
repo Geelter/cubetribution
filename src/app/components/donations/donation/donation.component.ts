@@ -109,5 +109,6 @@ export class DonationComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.cardsService.clearRequestedCards();
+    this.donationsService.clearSelectedDonation();
   }
 }

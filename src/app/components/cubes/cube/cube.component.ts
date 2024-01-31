@@ -89,5 +89,6 @@ export class CubeComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.cardsService.clearRequestedCards();
+    this.cubesService.clearSelectedCube();
   }
 }

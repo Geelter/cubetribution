@@ -116,5 +116,6 @@ export class CollectionComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.cardsService.clearRequestedCards();
+    this.collectionsService.clearSelectedCollection();
   }
 }
