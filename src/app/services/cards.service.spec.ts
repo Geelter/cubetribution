@@ -48,32 +48,26 @@ describe('CardsService', () => {
       data: missingCardData
     };
 
-    it(`should result in a 'Card[]' when all IDs are present in 'fetchedCards'`, fakeAsync(() => {
-      let result: Card[] | undefined;
-
+    it(`should emit correct value when all IDs are present in 'fetchedCards'`, fakeAsync(() => {
       presentCards.forEach(card => {
         cardsService['fetchedCards'].set(card.id, card);
       });
 
-      cardsService.getCardsForIDs(presentIDs).subscribe(cards => {
-        result = cards;
-      });
+      cardsService.getCardsForIDs(presentIDs).subscribe();
 
       tick();
 
-      expect(result as Card[]).toBeInstanceOf(Array);
-      expect((result as Card[]).length).toBe(presentIDs.length);
-      expect((result as Card[])[0]).toBeInstanceOf(Card);
+      const requestedCards = cardsService['requestedCards'].getValue();
+
+      expect(requestedCards).toBeInstanceOf(Array);
+      expect(requestedCards.length).toBe(presentIDs.length);
+      expect(requestedCards[0]).toBeInstanceOf(Card);
 
       flushMicrotasks();
     }));
 
-    it(`should result in a 'Card[]' after making a network request, when all IDs are missing from 'fetchedCards'`, fakeAsync(() => {
-      let result: Card[] | undefined;
-
-      cardsService.getCardsForIDs(missingIDs).subscribe(cards => {
-        result = cards;
-      });
+    it(`should emit correct value after making a network request, when all IDs are missing from 'fetchedCards'`, fakeAsync(() => {
+      cardsService.getCardsForIDs(missingIDs).subscribe();
 
       httpTestingController
         .expectOne(endpointURL)
@@ -81,23 +75,21 @@ describe('CardsService', () => {
 
       tick();
 
-      expect(result as Card[]).toBeInstanceOf(Array);
-      expect((result as Card[]).length).toBe(missingIDs.length);
-      expect((result as Card[])[0]).toBeInstanceOf(Card);
+      const requestedCards = cardsService['requestedCards'].getValue();
+
+      expect(requestedCards).toBeInstanceOf(Array);
+      expect(requestedCards.length).toBe(missingIDs.length);
+      expect(requestedCards[0]).toBeInstanceOf(Card);
 
       flushMicrotasks();
     }));
 
-    it(`should result in a 'Card[]' after making a network request, when some IDs are present in 'fetchedCards' and some not`, fakeAsync(() => {
-      let result: Card[] | undefined;
-
+    it(`should emit correct value after making a network request, when some IDs are present in 'fetchedCards' and some not`, fakeAsync(() => {
       presentCards.forEach(card => {
         cardsService['fetchedCards'].set(card.id, card);
       });
 
-      cardsService.getCardsForIDs(combinedIDs).subscribe(cards => {
-        result = cards;
-      });
+      cardsService.getCardsForIDs(combinedIDs).subscribe();
 
       httpTestingController
         .expectOne(endpointURL)
@@ -105,9 +97,11 @@ describe('CardsService', () => {
 
       tick();
 
-      expect(result as Card[]).toBeInstanceOf(Array);
-      expect((result as Card[]).length).toBe(combinedCards.length);
-      expect((result as Card[])[0]).toBeInstanceOf(Card);
+      const requestedCards = cardsService['requestedCards'].getValue();
+
+      expect(requestedCards).toBeInstanceOf(Array);
+      expect(requestedCards.length).toBe(combinedIDs.length);
+      expect(requestedCards[0]).toBeInstanceOf(Card);
 
       flushMicrotasks();
     }));
