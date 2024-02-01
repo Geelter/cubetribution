@@ -6,6 +6,7 @@ import {generateCardsForData} from "../helpers/tests/generate-cards-for-data";
 import {Card} from "../models/card";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {ScryfallCollectionResponse} from "../models/scryfall-collection-response";
+import {RequestState} from "../helpers/request-state.enum";
 
 describe('CardsService', () => {
   let cardsService: CardsService;
@@ -22,6 +23,7 @@ describe('CardsService', () => {
   afterEach(() => {
     httpTestingController.verify();
     cardsService['fetchedCards'].clear();
+    cardsService['requestState'].next(RequestState.Initial);
   })
 
   it('should be created', () => {
