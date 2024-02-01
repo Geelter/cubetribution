@@ -52,12 +52,6 @@ export class SupabaseDatabaseService {
         severity: 'error',
         summary: 'Fetching dashboard data failed',
       });
-    } else {
-      this.messageService.add({
-        key: 'global',
-        severity: 'success',
-        summary: 'Dashboard data fetched'
-      });
     }
 
     return {
