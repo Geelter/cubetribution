@@ -10,7 +10,7 @@ Powered by Angular and Supabase with Scryfall as the source for card data.
 - [RxJs](https://rxjs.dev)
 - [PrimeNG](https://primeng.org)
 - [Supabase](https://supabase.com)
-- [Karma](https://karma-runner.github.io)
+- [Jest](https://jestjs.io/)
 - [Scryfall API](https://scryfall.com/docs/api)
 
 ## Project overview
@@ -58,6 +58,7 @@ Available functionalities
   - applying the 'retry' operator to request observables
 - Rewrite templates to the new @if/@for syntax
 - Simplify observable subscription management through the view model pattern
+- Migrate over to Jest from Jasmine/Karma
 
 ## TODO
 
