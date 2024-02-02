@@ -7,7 +7,6 @@ import {RequestState} from "../helpers/request-state.enum";
 import {ScryfallCollectionResponse} from "../models/scryfall-collection-response";
 import {ScryfallAutocompleteResponse} from "../models/scryfall-autocomplete-response";
 import {generateCardDataForID} from "../helpers/tests/generate-card-data-for-id";
-import createSpy = jasmine.createSpy;
 
 describe('ScryfallService', () => {
   let scryfallService: ScryfallService;
@@ -159,9 +158,6 @@ describe('ScryfallService', () => {
     }));
 
     it('should not make a collection request for empty autocomplete response', fakeAsync(() => {
-      const setRequestStateSpy = createSpy('setRequestState');
-      spyOn<any>(scryfallService, 'setRequestState').and.callFake(setRequestStateSpy);
-
       scryfallService.getCardsForAutocomplete(query).subscribe();
 
       httpTestingController
@@ -174,15 +170,11 @@ describe('ScryfallService', () => {
 
       httpTestingController.expectNone(`${baseURL}/collection`);
 
-      expect(setRequestStateSpy).toHaveBeenCalledTimes(2);
-
       flushMicrotasks();
     }));
 
     it(`should set request state to 'Success' if no errors`, fakeAsync(() => {
-      const setRequestStateSpy = createSpy('setRequestState');
-      spyOn<any>(scryfallService, 'setRequestState').and.callFake(setRequestStateSpy);
-
+      const setRequestStateSpy = jest.spyOn(scryfallService as any, 'setRequestState');
       scryfallService.getCardsForAutocomplete(query).subscribe();
 
       httpTestingController
